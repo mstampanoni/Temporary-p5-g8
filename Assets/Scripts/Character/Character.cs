@@ -2,6 +2,7 @@ using UnityEngine;
 
 public abstract class Character : MonoBehaviour
 {
+    #region Init Variable
     [Header("Identité du Personnage")]
     [SerializeField] private string mName;         
 
@@ -22,6 +23,7 @@ public abstract class Character : MonoBehaviour
 
     [Header("Sous-Systèmes")]
     [SerializeField] private LifeSystem mLifeSystem;
+    #endregion
 
     #region Getter
     public string GetName() { return mName; }
@@ -38,7 +40,7 @@ public abstract class Character : MonoBehaviour
 
     private void Start()
     {
-        mLifeSystem = new LifeSystem(mMaxHealth , mDefense);
+        mLifeSystem.Init(mMaxHealth , mDefense);
     }
 
     private float CalculateTotalDamage()
@@ -50,24 +52,24 @@ public abstract class Character : MonoBehaviour
         if (isACriticalAttack)
         {
             baseDamage = Mathf.RoundToInt(baseDamage * mCriticalMultiplier);
-            Debug.Log($"Coup critique ! Dégâts : {baseDamage}");
+            Debug.Log("Coup critique ! Dégâts" + baseDamage);
         }
         return baseDamage;
     }
 
     public virtual void Attack(Character target)
     {
-        Debug.Log($"{mName} attaque {target.GetName()} !");
+        Debug.Log(mName + "attaque" + target.GetName() + "!");
     }
 
     public virtual void Competence(Character target)
     {
-        Debug.Log($"{mName} utilise une compétence spéciale sur {target.GetName()} !");
+        Debug.Log(mName + "utilise une compétence spéciale sur" + target.GetName() + "!");
     }
 
     public virtual void Ultimate(Character target)
     {
-        Debug.Log($"{mName} utilise son ultime sur {target.GetName()} !");
+        Debug.Log(mName + "utilise son ultime sur" + target.GetName() + "!");
     }
 
     public bool CanLaunchUltimate()

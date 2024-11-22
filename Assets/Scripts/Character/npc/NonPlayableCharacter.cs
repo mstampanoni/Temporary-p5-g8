@@ -47,7 +47,7 @@ public class Enemy : Character
         if (killingTarget != null)
         {
             target = killingTarget;
-            Debug.Log($"{GetName()} cible {target.GetName()} pour l'achever !");
+            Debug.Log(GetName() + "cible" + target.GetName() + "pour l'achever !");
         }
 
         Attack(target);
