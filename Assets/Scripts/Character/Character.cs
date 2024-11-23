@@ -23,6 +23,8 @@ public abstract class Character : MonoBehaviour
 
     [Header("Sous-Systèmes")]
     [SerializeField] private LifeSystem mLifeSystem;
+
+    private bool inGame = false;
     #endregion
 
     #region Getter
@@ -36,6 +38,17 @@ public abstract class Character : MonoBehaviour
     public float GetMana() { return mCurrentMana; }
     public float GetChargingMana() { return mChargingMana; }
     public LifeSystem GetLifeSystem() { return mLifeSystem; } 
+    public bool isInGame() { return inGame; }
+    #endregion
+
+    #region buff
+    public void addAttack(float addAttack , int numberOfRound) { mAttack += addAttack; } // le faire avec des routines
+    public void addSpeed(float addSpeed, int numberOfRound) { mSpeed += addSpeed; }
+    public void addMana(float addMana, int numberOfRound) { mCurrentMana += addMana; }
+    #endregion
+
+    #region Setter
+    public void isInGame(bool new_Active) { inGame = new_Active; }
     #endregion
 
     private void Start()
@@ -57,20 +70,11 @@ public abstract class Character : MonoBehaviour
         return baseDamage;
     }
 
-    public virtual void Attack(Character target)
-    {
-        Debug.Log(mName + "attaque" + target.GetName() + "!");
-    }
-
-    public virtual void Competence(Character target)
-    {
-        Debug.Log(mName + "utilise une compétence spéciale sur" + target.GetName() + "!");
-    }
-
-    public virtual void Ultimate(Character target)
-    {
-        Debug.Log(mName + "utilise son ultime sur" + target.GetName() + "!");
-    }
+    #region Virtual Function
+    public virtual void Attack(Character target){}
+    public virtual void Competence(Character target){}
+    public virtual void Ultimate(Character target){}
+    #endregion
 
     public bool CanLaunchUltimate()
     {

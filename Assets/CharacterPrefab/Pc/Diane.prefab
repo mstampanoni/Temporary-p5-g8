@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mName: Diane
-  mMaxHealth: 0
+  mMaxHealth: 1
   mAttack: 0
   mDefense: 0
   mSpeed: 4

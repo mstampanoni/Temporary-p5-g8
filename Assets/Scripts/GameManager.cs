@@ -2,22 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class GameManager : MonoBehaviour
 {
+    #region Init value
     [SerializeField] private List<GameObject> mPlayerPrefabs;
     [SerializeField] private List<GameObject> mEnemyPrefabs;
     [SerializeField] private Transform[] mPlayerPositions;
     [SerializeField] private Transform[] mEnemyPositions;
+
+    [SerializeField] private RotatingSelection mRotatingSelection;
 
     private List<Character> mTurnQueue;
     private float mGlobalMin = 0f;
     private bool isTurnCycleRunning = false;
     private bool isRunningCoroutine = false;
 
+    private List<Player> mActivePlayers;
+    private List<Enemy> mActiveEnemies;
+
+    //Lié au choix des actions
+    private RectTransform selectedAction = null;
+    private RectTransform confirmedAction = null;
+    private bool actionConfirmed = false;
+    #endregion
+
     private void Start()
     {
         mTurnQueue = new ();
+        mActivePlayers = new ();
+        mActiveEnemies = new ();
         SetUpGame();
     }
 
@@ -29,6 +44,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < mPlayerPrefabs.Count && i < mPlayerPositions.Length; i++)
         {
             GameObject player = Instantiate(mPlayerPrefabs[i], mPlayerPositions[i].position, Quaternion.identity);
+            player.GetComponent<Player>().isInGame(true);
             player.transform.SetParent(pcContainer.transform);
             AddToTurnQueue(player);
         }
@@ -37,7 +53,54 @@ public class GameManager : MonoBehaviour
         {
             GameObject enemy = Instantiate(mEnemyPrefabs[i], mEnemyPositions[i].position, Quaternion.identity);
             enemy.transform.SetParent(npcContainer.transform);
+            enemy.GetComponent<Enemy>().isInGame(true);
             AddToTurnQueue(enemy);
+        }
+    }
+
+    private void WatchForActive()
+    {
+        foreach (Character character in mTurnQueue) 
+        {
+            if (character.isInGame())
+            {
+                if (character.gameObject.TryGetComponent<Player>(out Player player))
+                {
+                    if (mActivePlayers.Contains(player))
+                    {
+                        if (!player.GetLifeSystem().IsAlive())
+                        {
+                            player.isInGame(false);
+                            mActivePlayers.Remove(player);
+                        }
+                    }
+                    else
+                    {
+                        if (player.GetLifeSystem().IsAlive())
+                        {
+                            mActivePlayers.Add(player);
+                        }
+                    }
+                }
+                else if (character.gameObject.TryGetComponent<Enemy>(out Enemy enemy))
+                {
+                    if (mActiveEnemies.Contains(enemy))
+                    {
+                        if (!enemy.GetLifeSystem().IsAlive())
+                        {
+                            enemy.isInGame(false);
+                            mActiveEnemies.Remove(enemy);
+                        }
+                    }
+                    else
+                    {
+                        if (enemy.GetLifeSystem().IsAlive())
+                        {
+                            mActiveEnemies.Add(enemy);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -64,6 +127,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        WatchForActive();
         if (!isTurnCycleRunning)
         {
             StartTurnCycle();
@@ -73,6 +137,76 @@ public class GameManager : MonoBehaviour
             StartCoroutine(RunTurnCycle());
         }
     }
+
+    private Enemy GetRandomEnemy()
+    {
+        if (mActiveEnemies.Count > 0)
+        {
+            return mActiveEnemies[Random.Range(0, mActiveEnemies.Count)];
+        }
+        return null;
+    }
+
+    private void ExecuteAction(Character character, RectTransform selectedAction)
+    {
+        if (selectedAction == mRotatingSelection.GetAttackCircle())
+        {
+            Debug.Log("Action confirmée : Attaque.");
+            character.Attack(GetRandomEnemy());
+        }
+        else if (selectedAction == mRotatingSelection.GetCompetenceCircle())
+        {
+            Debug.Log("Action confirmée : Compétence.");
+            character.Competence(GetRandomEnemy());
+        }
+        else
+        {
+            Debug.LogWarning("Aucune action valide n'a été sélectionnée.");
+        }
+
+        actionConfirmed = false;
+        mRotatingSelection.setConfirmedActionNull();
+    }
+
+    public void OnClickAction()
+    {
+        confirmedAction = mRotatingSelection.GetConfirmed();
+
+        if (confirmedAction != null)
+        {
+            actionConfirmed = true;
+        }
+        else
+        {
+            RectTransform tempAction = mRotatingSelection.GetSelected();
+            if (tempAction != null && tempAction != selectedAction)
+            {
+                selectedAction = tempAction;
+            }
+        }
+    }
+
+    private IEnumerator WaitForActionSelection(Character character)
+    {
+        Debug.Log(character.GetName() + " peut jouer. Sélectionnez une action.");
+
+        if (mRotatingSelection != null)
+        {
+            selectedAction = mRotatingSelection.GetSelected();
+        }
+            
+        while (!actionConfirmed)
+        {
+            if (selectedAction != null)
+            {
+                Debug.Log("Action potentielle sélectionnée : " +
+                          (selectedAction == mRotatingSelection.GetAttackCircle() ? "Attaque" : "Compétence"));
+            }
+            yield return null;
+        }
+        ExecuteAction(character, confirmedAction);
+    }
+
 
     private void StartTurnCycle()
     {
@@ -85,81 +219,39 @@ public class GameManager : MonoBehaviour
     private IEnumerator RunTurnCycle()
     {
         isRunningCoroutine = true;
-        float incrementStep = GetIncrementStep();
-        mGlobalMin += incrementStep;
-        bool anyonePlayed = false;
 
-        mTurnQueue = mTurnQueue
-            .Where(data => data != null && data.gameObject != null)
-            .OrderByDescending(data => data.gameObject.GetComponent<Character>().GetSpeed())
-            .ToList();
-
-        int checkCharacter = 0;
-        foreach (var character in mTurnQueue)
+        while (true)
         {
-            checkCharacter++;
-            if (character == null || character.gameObject == null)
+            float incrementStep = GetIncrementStep();
+            mGlobalMin += incrementStep;
+            bool anyonePlayed = false;
+
+            mTurnQueue = mTurnQueue
+                .Where(data => data != null && data.gameObject != null)
+                .OrderByDescending(data => data.GetSpeed())
+                .ToList();
+
+            foreach (var character in mTurnQueue)
             {
-                mTurnQueue.Remove(character);
-                continue;
+                if (character == null || character.gameObject == null)
+                    continue;
+
+                if (character.GetSpeed() >= mGlobalMin)
+                {
+                    Debug.Log("Personnage prêt à jouer : " + character.GetName());
+                    anyonePlayed = true;
+
+                    yield return StartCoroutine(WaitForActionSelection(character));
+                }
             }
 
-            if (character.GetSpeed() >= mGlobalMin)
+            if (!anyonePlayed)
             {
-                Debug.Log("Personnage prêt à jouer : " + character.gameObject.name);
-
-                yield return WaitForMouseClick();
-
-                ExecuteTurn(character);
-                anyonePlayed = true;
+                Debug.Log("Fin du cycle, aucun personnage ne peut jouer. Réinitialisation.");
+                mGlobalMin = 0f;
             }
 
-            if (checkCharacter == mTurnQueue.Count)
-            {
-                StartCoroutine(RunTurnCycle());
-            }
-        }
-
-        if (!anyonePlayed)
-        {
-            Debug.Log("Fin du cycle, aucun personnage ne peut jouer.");
-            isRunningCoroutine = false;
+            yield return null; 
         }
     }
-
-    private IEnumerator WaitForMouseClick()
-    {
-        while (!Input.GetKeyDown("space")) 
-        {
-            yield return null;
-        }
-
-        yield return new WaitForSeconds(0.1f);
-    }
-
-
-    private void ExecuteTurn(Character character)
-    { 
-        Debug.Log(character.GetName() + "Attaque !");
-
-        // Placeholder pour gérer les actions spécifiques
-        //character.PerformAction();
-    }
-
-    //void OnApplicationQuit()
-    //{
-    //    if (mTurnQueue != null)
-    //    {
-    //        foreach (var character in mTurnQueue)
-    //        {
-    //            if (character != null && character.gameObject != null)
-    //            {
-    //                Destroy(character.gameObject);
-    //            }
-    //        }
-    //        mTurnQueue.Clear();
-    //        mTurnQueue = null;
-    //    }
-    //}
-
 }
