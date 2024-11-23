@@ -73,7 +73,7 @@ public abstract class Character : MonoBehaviour
     #region Virtual Function
     public virtual void Attack(Character target){}
     public virtual void Competence(Character target){}
-    public virtual void Ultimate(Character target){}
+    public virtual void Ultimate(){}
     #endregion
 
     public bool CanLaunchUltimate()

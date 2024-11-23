@@ -12,8 +12,8 @@ public class Player : Character
         Debug.Log(GetName() + "utilise une compétence spéciale sur" + target.GetName() + "!");
     }
 
-    public override void Ultimate(Character target)
+    public override void Ultimate()
     {
-        Debug.Log(GetName() + "utilise son ultime sur" + target.GetName() + "!");
+        Debug.Log(GetName() + "utilise son ultime sur");
     }
 }

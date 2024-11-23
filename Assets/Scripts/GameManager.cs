@@ -146,6 +146,16 @@ public class GameManager : MonoBehaviour
         }
         return null;
     }
+    public void LaunchUltimate(GameObject goCharacter)
+    {
+        if(goCharacter.TryGetComponent<Character>(out Character character))
+        {
+            if (character.CanLaunchUltimate())
+            {
+                character.Ultimate();
+            }
+        }
+    }
 
     private void ExecuteAction(Character character, RectTransform selectedAction)
     {
