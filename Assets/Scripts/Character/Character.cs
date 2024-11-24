@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 
 public abstract class Character : MonoBehaviour
 {
+    public event Action<float> OnManaChanged;
+
     #region Init Variable
     [Header("Identité du Personnage")]
     [SerializeField] private string mName;         
@@ -42,9 +45,13 @@ public abstract class Character : MonoBehaviour
     #endregion
 
     #region buff
-    public void addAttack(float addAttack , int numberOfRound) { mAttack += addAttack; } // le faire avec des routines
-    public void addSpeed(float addSpeed, int numberOfRound) { mSpeed += addSpeed; }
-    public void addMana(float addMana, int numberOfRound) { mCurrentMana += addMana; }
+    public void AddAttack(float addAttack , int numberOfRound) { mAttack += addAttack; } // le faire avec des routines
+    public void AddSpeed(float addSpeed, int numberOfRound) { mSpeed += addSpeed; }
+    public void AddMana(float amount)
+    {
+        mCurrentMana = Mathf.Min(mCurrentMana + amount, mMaxMana);
+        OnManaChanged?.Invoke(mCurrentMana); // Notifier les changements
+    }
     #endregion
 
     #region Setter
@@ -73,7 +80,7 @@ public abstract class Character : MonoBehaviour
     #region Virtual Function
     public virtual void Attack(Character target){}
     public virtual void Competence(Character target){}
-    public virtual void Ultimate(){}
+    public virtual void Ultimate(Character target) {}
     #endregion
 
     public bool CanLaunchUltimate()
@@ -81,9 +88,9 @@ public abstract class Character : MonoBehaviour
         return mCurrentMana >= mMaxMana;
     }
 
-
-    public void RestartMana()
+    public void ResetMana()
     {
         mCurrentMana = 0;
+        OnManaChanged?.Invoke(mCurrentMana); // Notifier les changements
     }
 }

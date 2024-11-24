@@ -156,7 +156,7 @@ MonoBehaviour:
   mSpeed: 6
   mCriticalChance: 0
   mCriticalMultiplier: 0
-  mMaxMana: 0
+  mMaxMana: 100
   mCurrentMana: 0
   mChargingMana: 0
   mLifeSystem: {fileID: 7796179437844390993}

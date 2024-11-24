@@ -7,12 +7,16 @@ using UnityEngine.TextCore.Text;
 public class GameManager : MonoBehaviour
 {
     #region Init value
+    [Header("Prefab et position")]
     [SerializeField] private List<GameObject> mPlayerPrefabs;
     [SerializeField] private List<GameObject> mEnemyPrefabs;
     [SerializeField] private Transform[] mPlayerPositions;
     [SerializeField] private Transform[] mEnemyPositions;
 
+    [Header("Sous-Systèmes")]
     [SerializeField] private RotatingSelection mRotatingSelection;
+    [SerializeField] private SelectEnemy mSelectEnemy;
+    [SerializeField] private UIManager mUIManager;
 
     private List<Character> mTurnQueue;
     private float mGlobalMin = 0f;
@@ -26,14 +30,23 @@ public class GameManager : MonoBehaviour
     private RectTransform selectedAction = null;
     private RectTransform confirmedAction = null;
     private bool actionConfirmed = false;
+
+    private Enemy mCurrentSelectedEnnemy;
+
+    // Variables pour le mode ultimate
+    private bool isInUltimateMode = false;
+    private bool isWaitingForConfirmation = false;
+
     #endregion
 
     private void Start()
     {
-        mTurnQueue = new ();
-        mActivePlayers = new ();
-        mActiveEnemies = new ();
+        mTurnQueue = new();
+        mActivePlayers = new();
+        mActiveEnemies = new();
+        mCurrentSelectedEnnemy = null;
         SetUpGame();
+        WatchForActive();
     }
 
     private void SetUpGame()
@@ -60,7 +73,7 @@ public class GameManager : MonoBehaviour
 
     private void WatchForActive()
     {
-        foreach (Character character in mTurnQueue) 
+        foreach (Character character in mTurnQueue)
         {
             if (character.isInGame())
             {
@@ -79,6 +92,7 @@ public class GameManager : MonoBehaviour
                         if (player.GetLifeSystem().IsAlive())
                         {
                             mActivePlayers.Add(player);
+                            mUIManager.AssignPlayerUI(player);
                         }
                     }
                 }
@@ -97,6 +111,11 @@ public class GameManager : MonoBehaviour
                         if (enemy.GetLifeSystem().IsAlive())
                         {
                             mActiveEnemies.Add(enemy);
+                            if (mCurrentSelectedEnnemy == null)
+                            {
+                                mCurrentSelectedEnnemy = enemy;
+                                mSelectEnemy.setEnemyTarget(mCurrentSelectedEnnemy);
+                            }
                         }
                     }
                 }
@@ -132,28 +151,68 @@ public class GameManager : MonoBehaviour
         {
             StartTurnCycle();
         }
-        else if (!isRunningCoroutine) 
+        else
         {
-            StartCoroutine(RunTurnCycle());
+            mCurrentSelectedEnnemy = mSelectEnemy.GetSelectedEnemy();
+            if (!isRunningCoroutine)
+            {
+                StartCoroutine(RunTurnCycle());
+            }
         }
     }
 
-    private Enemy GetRandomEnemy()
+    public void StartUltimateMode()
     {
-        if (mActiveEnemies.Count > 0)
-        {
-            return mActiveEnemies[Random.Range(0, mActiveEnemies.Count)];
-        }
-        return null;
+        isInUltimateMode = true;
+        isWaitingForConfirmation = true;
+        Debug.Log("Mode ultimate activé. Veuillez confirmer l'ennemi.");
+
+        // Désactiver les autres actions comme l'attaque ou la compétence (si nécessaire)
+        // Par exemple : Désactiver les boutons d'action dans l'UI
     }
+
     public void LaunchUltimate(GameObject goCharacter)
     {
-        if(goCharacter.TryGetComponent<Character>(out Character character))
+        if (goCharacter.TryGetComponent<Character>(out Character character))
         {
-            if (character.CanLaunchUltimate())
+            if (character.CanLaunchUltimate() && !isInUltimateMode)
             {
-                character.Ultimate();
+                isInUltimateMode = true;  // On entre en mode ultimate
+                isWaitingForConfirmation = true;
+
+                StartCoroutine(WaitForEnemySelection(character)); 
             }
+        }
+    }
+
+    private IEnumerator WaitForEnemySelection(Character character)
+    {
+        Debug.Log("Mode Ultimate activé. Sélectionnez un ennemi.");
+
+        while (isWaitingForConfirmation)
+        {
+            if (Input.GetMouseButtonDown(0))  
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out RaycastHit hit))
+                {
+                    Enemy enemy = hit.collider.GetComponent<Enemy>();
+                    if (enemy != null && enemy == mCurrentSelectedEnnemy)
+                    {
+                        Debug.Log("Ultimate lancé sur " + enemy.name);
+                        character.Ultimate(enemy);
+
+                        isInUltimateMode = false;
+                        isWaitingForConfirmation = false;
+                    }
+                    else
+                    {
+                        Debug.Log("L'ennemi sélectionné pour l'ultimate n'est pas celui cliqué.");
+                    }
+                }
+            }
+
+            yield return null;
         }
     }
 
@@ -161,13 +220,13 @@ public class GameManager : MonoBehaviour
     {
         if (selectedAction == mRotatingSelection.GetAttackCircle())
         {
-            Debug.Log("Action confirmée : Attaque.");
-            character.Attack(GetRandomEnemy());
+            Debug.Log("Action confirmée : Attaque sur " + mCurrentSelectedEnnemy.name);
+            character.Attack(mCurrentSelectedEnnemy);
         }
         else if (selectedAction == mRotatingSelection.GetCompetenceCircle())
         {
-            Debug.Log("Action confirmée : Compétence.");
-            character.Competence(GetRandomEnemy());
+            Debug.Log("Action confirmée : Compétence sur " + mCurrentSelectedEnnemy.name);
+            character.Competence(mCurrentSelectedEnnemy);
         }
         else
         {
@@ -204,7 +263,7 @@ public class GameManager : MonoBehaviour
         {
             selectedAction = mRotatingSelection.GetSelected();
         }
-            
+
         while (!actionConfirmed)
         {
             if (selectedAction != null)
@@ -261,7 +320,7 @@ public class GameManager : MonoBehaviour
                 mGlobalMin = 0f;
             }
 
-            yield return null; 
+            yield return null;
         }
     }
 }

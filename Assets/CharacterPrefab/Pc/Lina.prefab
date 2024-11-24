@@ -156,8 +156,8 @@ MonoBehaviour:
   mSpeed: 3
   mCriticalChance: 0
   mCriticalMultiplier: 0
-  mMaxMana: 0
-  mCurrentMana: 0
+  mMaxMana: 20
+  mCurrentMana: 1
   mChargingMana: 0
   mLifeSystem: {fileID: 4213842051882722688}
 --- !u!114 &4213842051882722688

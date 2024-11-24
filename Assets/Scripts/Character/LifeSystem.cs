@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,8 +7,9 @@ public class LifeSystem : MonoBehaviour
 {
     private float mMaxHealth;
     private float mCurrentHealth;
-    private float mDefense; 
+    private float mDefense;
 
+    public event Action<float> OnHealthChanged;
     public void Init(float maxHealth, float defense)
     {
         mMaxHealth = maxHealth;
@@ -30,8 +32,9 @@ public class LifeSystem : MonoBehaviour
     {
         float effectiveDamage = Mathf.Max(damage - mDefense, 0);
         mCurrentHealth = Mathf.Max(mCurrentHealth - effectiveDamage, 0);
+        Debug.Log("Dégâts subis : " + damage + " (réduction de " + mDefense + "). Dégâts effectifs : " + effectiveDamage + ". PV restants : " + mCurrentHealth);
 
-        Debug.Log("Dégâts subis" + damage + "(réduction de" + mDefense + "). Dégâts effectifs" + effectiveDamage + ". PV restants" + mCurrentHealth);
+        OnHealthChanged?.Invoke(mCurrentHealth); 
     }
 
     public bool CouldGetKill(float damage)
@@ -52,7 +55,9 @@ public class LifeSystem : MonoBehaviour
     public void Heal(float amount)
     {
         mCurrentHealth = Mathf.Min(mCurrentHealth + amount, mMaxHealth);
-        Debug.Log("Soins reçus" + amount + ". PV actuels" + mCurrentHealth);
+        Debug.Log("Soins reçus : " + amount + ". PV actuels : " + mCurrentHealth);
+
+        OnHealthChanged?.Invoke(mCurrentHealth); 
     }
 
     public bool IsAlive()
