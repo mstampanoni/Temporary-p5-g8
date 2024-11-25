@@ -191,27 +191,14 @@ public class GameManager : MonoBehaviour
 
         while (isWaitingForConfirmation)
         {
-            if (Input.GetMouseButtonDown(0))  
+            if (mSelectEnemy.GetConfirmed() != null) 
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out RaycastHit hit))
-                {
-                    Enemy enemy = hit.collider.GetComponent<Enemy>();
-                    if (enemy != null && enemy == mCurrentSelectedEnnemy)
-                    {
-                        Debug.Log("Ultimate lancé sur " + enemy.name);
-                        character.Ultimate(enemy);
+                Debug.Log("Ultimate lancé sur " + mSelectEnemy.GetConfirmed().name);
+                character.Ultimate(mSelectEnemy.GetConfirmed());
 
-                        isInUltimateMode = false;
-                        isWaitingForConfirmation = false;
-                    }
-                    else
-                    {
-                        Debug.Log("L'ennemi sélectionné pour l'ultimate n'est pas celui cliqué.");
-                    }
-                }
+                isInUltimateMode = false;
+                isWaitingForConfirmation = false;
             }
-
             yield return null;
         }
     }
