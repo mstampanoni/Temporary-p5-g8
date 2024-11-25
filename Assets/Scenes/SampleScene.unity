@@ -1467,6 +1467,9 @@ MonoBehaviour:
   playerUIPrefab: {fileID: 542344809}
   uiCanvas: {fileID: 1566049396}
   xOffset: 400
+  selectedScale: 1.005
+  deselectedScale: 0.905
+  animationSpeed: 0.2
 --- !u!1 &1330453878
 GameObject:
   m_ObjectHideFlags: 0

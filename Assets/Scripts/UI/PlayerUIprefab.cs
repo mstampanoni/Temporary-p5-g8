@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using static UnityEngine.GraphicsBuffer;
 
 public class PlayerUIManager : MonoBehaviour
 {
@@ -8,6 +10,11 @@ public class PlayerUIManager : MonoBehaviour
     private Player mplayer;
 
     [SerializeField] private GameManager mGameManager; 
+
+    public Player GetPlayer()
+    {
+        return mplayer;
+    }
 
     public void Initialize(Player player, Transform uiInstance)
     {
@@ -87,4 +94,25 @@ public class PlayerUIManager : MonoBehaviour
             Debug.LogError("GameManager non assigné !");
         }
     }
+
+    public void SetScale(float targetScale, float animationSpeed)
+    {
+        StartCoroutine(AnimateScale(targetScale, animationSpeed));
+    }
+
+    private IEnumerator AnimateScale(float targetScale, float animationSpeed)
+    {
+        Vector3 originalScale = transform.localScale;
+        Vector3 newScale = new Vector3(originalScale.x * targetScale, originalScale.y * targetScale, originalScale.z);
+        float elapsedTime = 0f;
+
+        while (elapsedTime < animationSpeed)
+        {
+            elapsedTime += Time.deltaTime;
+            transform.localScale = Vector3.Lerp(originalScale, newScale, elapsedTime / animationSpeed);
+            yield return null;
+        }
+
+    }
+
 }
