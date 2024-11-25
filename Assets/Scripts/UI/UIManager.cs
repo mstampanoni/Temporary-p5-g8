@@ -1,12 +1,23 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private GameObject playerUIPrefab;
     [SerializeField] private RectTransform uiCanvas;  
-    [SerializeField] private float xOffset = 100f;     
+    [SerializeField] private float xOffset = 100f;
+    [SerializeField] private float selectedScale = 1.1f;
+    [SerializeField] private float deselectedScale = 1f;
+    [SerializeField] private float animationSpeed = 0.2f;
 
     private int uiCount = 0;
+
+    private List<PlayerUIManager> playerUIs;
+
+    private void Start()
+    {
+        playerUIs = new();
+    }
 
     public void AssignPlayerUI(Player player)
     {
@@ -18,6 +29,7 @@ public class UIManager : MonoBehaviour
 
         GameObject uiInstance = Instantiate(playerUIPrefab, uiCanvas);
         uiInstance.SetActive(true); 
+        playerUIs.Add(uiInstance.GetComponent<PlayerUIManager>());
 
         RectTransform rectTransform = uiInstance.GetComponent<RectTransform>();
         if (rectTransform != null)
@@ -37,5 +49,20 @@ public class UIManager : MonoBehaviour
     public void UIvisibility(bool isActive)
     {
         uiCanvas.gameObject.SetActive(isActive);
+    }
+
+    public void HighlightActivePlayer(Player activePlayer)
+    {
+        foreach (var playerUI in playerUIs)
+        {
+            if (playerUI.GetPlayer() == activePlayer)
+            {
+                playerUI.SetScale(selectedScale, animationSpeed);
+            }
+            else
+            {
+                playerUI.SetScale(deselectedScale, animationSpeed);
+            }
+        }
     }
 }

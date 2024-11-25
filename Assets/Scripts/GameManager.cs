@@ -250,6 +250,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator WaitForActionSelection(Character character)
     {
         Debug.Log(character.GetName() + " peut jouer. Sélectionnez une action.");
+        mUIManager.HighlightActivePlayer(character.GetComponent<Player>());
 
         if (mRotatingSelection != null)
         {
