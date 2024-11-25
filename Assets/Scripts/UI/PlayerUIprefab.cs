@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using static UnityEngine.GraphicsBuffer;
+using static Cinemachine.CinemachineTargetGroup;
 
 public class PlayerUIManager : MonoBehaviour
 {
@@ -9,7 +10,13 @@ public class PlayerUIManager : MonoBehaviour
     private Image manaSlider;
     private Player mplayer;
 
-    [SerializeField] private GameManager mGameManager; 
+    [SerializeField] private GameManager mGameManager;
+    private Vector3 mOriginalScale;
+
+    public void Start()
+    {
+         mOriginalScale = transform.localScale;
+    }
 
     public Player GetPlayer()
     {
@@ -101,6 +108,7 @@ public class PlayerUIManager : MonoBehaviour
 
     private IEnumerator AnimateScale(float targetScale, float animationSpeed)
     {
+        transform.localScale = mOriginalScale;
         Vector3 originalScale = transform.localScale;
         Vector3 newScale = new Vector3(originalScale.x * targetScale, originalScale.y * targetScale, originalScale.z);
         float elapsedTime = 0f;
