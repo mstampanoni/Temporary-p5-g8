@@ -33,4 +33,9 @@ public class UIManager : MonoBehaviour
 
         uiCount++; 
     }
+
+    public void UIvisibility(bool isActive)
+    {
+        uiCanvas.gameObject.SetActive(isActive);
+    }
 }

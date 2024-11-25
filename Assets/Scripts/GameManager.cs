@@ -161,14 +161,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void StartUltimateMode()
+    private void StartUltimateMode()
     {
         isInUltimateMode = true;
         isWaitingForConfirmation = true;
         Debug.Log("Mode ultimate activé. Veuillez confirmer l'ennemi.");
 
-        // Désactiver les autres actions comme l'attaque ou la compétence (si nécessaire)
-        // Par exemple : Désactiver les boutons d'action dans l'UI
+        mUIManager.UIvisibility(false);
+    }
+
+    private void EndUltimateMode()
+    {
+        isInUltimateMode = false;
+        isWaitingForConfirmation = false;
+        Debug.Log("Mode ultimate desactivé.");
+
+        mUIManager.UIvisibility(true);
     }
 
     public void LaunchUltimate(GameObject goCharacter)
@@ -177,9 +185,7 @@ public class GameManager : MonoBehaviour
         {
             if (character.CanLaunchUltimate() && !isInUltimateMode)
             {
-                isInUltimateMode = true;  // On entre en mode ultimate
-                isWaitingForConfirmation = true;
-
+                StartUltimateMode();
                 StartCoroutine(WaitForEnemySelection(character)); 
             }
         }
@@ -195,9 +201,8 @@ public class GameManager : MonoBehaviour
             {
                 Debug.Log("Ultimate lancé sur " + mSelectEnemy.GetConfirmed().name);
                 character.Ultimate(mSelectEnemy.GetConfirmed());
-
-                isInUltimateMode = false;
-                isWaitingForConfirmation = false;
+                character.ResetMana();
+                EndUltimateMode();
             }
             yield return null;
         }
@@ -262,7 +267,6 @@ public class GameManager : MonoBehaviour
         }
         ExecuteAction(character, confirmedAction);
     }
-
 
     private void StartTurnCycle()
     {
