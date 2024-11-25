@@ -114,7 +114,7 @@ public class GameManager : MonoBehaviour
                             if (mCurrentSelectedEnnemy == null)
                             {
                                 mCurrentSelectedEnnemy = enemy;
-                                mSelectEnemy.setEnemyTarget(mCurrentSelectedEnnemy);
+                                mSelectEnemy.SetEnemyTarget(mCurrentSelectedEnnemy);
                             }
                         }
                     }
@@ -146,7 +146,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        mSelectEnemy.SetAllEnnemmies( mActiveEnemies );
+        mSelectEnemy.SetAllEnemies( mActiveEnemies );
         WatchForActive();
         if (!isTurnCycleRunning)
         {

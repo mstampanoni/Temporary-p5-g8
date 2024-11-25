@@ -70,9 +70,9 @@ public class SelectEnemy : MonoBehaviour
         {
             foreach (var material in renderer.materials)
             {
-                if (material.name.Contains("Outline Test Mat"))
+                if (material.name.Contains("outline test Mat"))
                 {
-                    material.SetFloat("_OutlineEnabled", 1);
+                    material.SetFloat("_on_off", 0);
                     break;
                 }
             }
@@ -85,9 +85,9 @@ public class SelectEnemy : MonoBehaviour
         {
             foreach (var material in renderer.materials)
             {
-                if (material.name.Contains("Outline Test Mat"))
+                if (material.name.Contains("outline test Mat"))
                 {
-                    material.SetFloat("_OutlineEnabled", 0);
+                    material.SetFloat("_on_off", 1);
                     break;
                 }
             }
