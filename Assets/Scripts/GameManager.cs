@@ -146,6 +146,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        mSelectEnemy.SetAllEnnemmies( mActiveEnemies );
         WatchForActive();
         if (!isTurnCycleRunning)
         {

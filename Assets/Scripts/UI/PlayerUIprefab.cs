@@ -82,7 +82,6 @@ public class PlayerUIManager : MonoBehaviour
             }
         }
     }
-
     private void OnUIButtonClick()
     {
         if (mGameManager != null)

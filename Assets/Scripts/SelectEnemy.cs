@@ -1,16 +1,13 @@
 using System.Collections.Generic;
-using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class SelectEnemy : MonoBehaviour
 {
     #region Init value
-    [SerializeField] private Color highlightColor = Color.red;
-
     private Enemy selectedEnemy;
     private Enemy confirmedSelectedEnemy;
-    private Color originalColor;
-    private Renderer lastRenderer;
+
+    [SerializeField] private List<Enemy> allEnemies;
     #endregion
 
     #region Getter
@@ -25,26 +22,79 @@ public class SelectEnemy : MonoBehaviour
     }
     #endregion
 
+    public void SetAllEnemies(List<Enemy> activeEnemyList)
+    {
+        allEnemies = activeEnemyList;
+    }
+
     void Update()
     {
-        confirmedSelectedEnemy = null;
         HandleEnemySelection();
+
+        UpdateOutlines();
     }
 
     private void HandleEnemySelection()
     {
-        if (Input.GetMouseButtonDown(0)) 
+        if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 Enemy enemy = hit.collider.GetComponent<Enemy>();
-                setEnemyTarget(enemy);
+                SetEnemyTarget(enemy);
             }
         }
     }
 
-    public void setEnemyTarget(Enemy target)
+    private void UpdateOutlines()
+    {
+        foreach (Enemy enemy in allEnemies)
+        {
+            Renderer enemyRenderer = enemy.GetComponent<Renderer>();
+
+            if (enemy == selectedEnemy)
+            {
+                EnableOutline(enemyRenderer);
+            }
+            else
+            {
+                DisableOutline(enemyRenderer);
+            }
+        }
+    }
+
+    private void EnableOutline(Renderer renderer)
+    {
+        if (renderer != null)
+        {
+            foreach (var material in renderer.materials)
+            {
+                if (material.name.Contains("Outline Test Mat"))
+                {
+                    material.SetFloat("_OutlineEnabled", 1);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void DisableOutline(Renderer renderer)
+    {
+        if (renderer != null)
+        {
+            foreach (var material in renderer.materials)
+            {
+                if (material.name.Contains("Outline Test Mat"))
+                {
+                    material.SetFloat("_OutlineEnabled", 0);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void SetEnemyTarget(Enemy target)
     {
         if (target != null)
         {
@@ -54,24 +104,9 @@ public class SelectEnemy : MonoBehaviour
             }
             else if (target != selectedEnemy)
             {
-                if (confirmedSelectedEnemy != null)
-                {
-                    confirmedSelectedEnemy = null;
-                }
-                if (lastRenderer != null)
-                {
-                    lastRenderer.material.color = originalColor;
-                }
-
-                Renderer enemyRenderer = target.GetComponent<Renderer>();
-                if (enemyRenderer != null)
-                {
-                    lastRenderer = enemyRenderer;
-                    originalColor = enemyRenderer.material.color;
-                    enemyRenderer.material.color = highlightColor;
-                }
-
+                confirmedSelectedEnemy = null;
                 selectedEnemy = target;
+
                 Debug.Log("Ennemi sélectionné : " + target.name);
             }
         }
