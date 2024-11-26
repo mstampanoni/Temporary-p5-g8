@@ -11,25 +11,15 @@ public class LogicCam : MonoBehaviour
     [SerializeField]
     private CinemachineFreeLook mOrbitalCam;
 
-    [SerializeField]
-    private List<GameObject> mCharacters;
-
-    private GameObject currentCharacter;
+    private List<Character> mCharacters;
 
     void Start()
     {
-        currentCharacter = mCharacters[0];
+        SwitchTarget(mCharacters[0].name);
     }
 
     void Update()
     {
-
-        // test need game logic
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            SwitchTarget();
-        }
-
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             // use right tag
@@ -73,9 +63,9 @@ public class LogicCam : MonoBehaviour
 
         mOrbitalCam.Priority = 0;
     }
-    private void SwitchTarget()
+    public void SwitchTarget(string targetName)
     {
-        GameObject newCharacter = GetNextCharacter();
+        GameObject newCharacter = GetCharacterByName(targetName);
 
         mOrbitalCam.Follow = newCharacter.transform;
         mOrbitalCam.LookAt = newCharacter.transform;
@@ -85,24 +75,30 @@ public class LogicCam : MonoBehaviour
 
             if (cam.gameObject.GetComponent<VirtualCamInfo>().UseFollow())
             {
-                Debug.Log("Follow changed");
                 cam.Follow = newCharacter.transform;
             }
 
             if (cam.gameObject.GetComponent<VirtualCamInfo>().UseLookAt())
             {
-                Debug.Log("Look at changed");
                 cam.LookAt = newCharacter.transform;
             }
         }
-
-        currentCharacter = newCharacter;
     }
 
-    private GameObject GetNextCharacter()
+    private GameObject GetCharacterByName(string name)
     {
-        int currentIndex = mCharacters.IndexOf(currentCharacter);
-        int nextIndex = (currentIndex + 1) % mCharacters.Count;
-        return mCharacters[nextIndex];
+        foreach (var character in mCharacters)
+        {
+            if(character.name == name)
+            {
+                return character.gameObject;
+            }
+        }
+        return null;
+    }
+
+    public void RegisterCharcater(List<Character> listToRegister)
+    {
+        mCharacters = listToRegister;
     }
 }

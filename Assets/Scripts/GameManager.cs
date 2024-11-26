@@ -37,6 +37,8 @@ public class GameManager : MonoBehaviour
     private bool isInUltimateMode = false;
     private bool isWaitingForConfirmation = false;
 
+    // cam link
+    private LogicCam mLogicCam;
     #endregion
 
     private void Start()
@@ -51,6 +53,8 @@ public class GameManager : MonoBehaviour
 
     private void SetUpGame()
     {
+        mLogicCam = GameObject.FindWithTag("LogicCam").GetComponent<LogicCam>();
+
         GameObject pcContainer = GameObject.Find("Character/pc");
         GameObject npcContainer = GameObject.Find("Character/npc");
 
@@ -69,6 +73,9 @@ public class GameManager : MonoBehaviour
             enemy.GetComponent<Enemy>().isInGame(true);
             AddToTurnQueue(enemy);
         }
+
+        mLogicCam.RegisterCharcater(mTurnQueue);
+
     }
 
     private void WatchForActive()
@@ -300,6 +307,8 @@ public class GameManager : MonoBehaviour
 
                 if (character.GetSpeed() >= mGlobalMin)
                 {
+                    mLogicCam.SwitchTarget(character.name);
+
                     Debug.Log("Personnage pr�t � jouer : " + character.GetName());
                     anyonePlayed = true;
 
