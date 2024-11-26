@@ -1,7 +1,11 @@
+using System;
 using UnityEngine;
 
 public abstract class Character : MonoBehaviour
 {
+    public event Action<float> OnManaChanged;
+
+    #region Init Variable
     [Header("Identité du Personnage")]
     [SerializeField] private string mName;         
 
@@ -23,6 +27,9 @@ public abstract class Character : MonoBehaviour
     [Header("Sous-Systèmes")]
     [SerializeField] private LifeSystem mLifeSystem;
 
+    private bool inGame = false;
+    #endregion
+
     #region Getter
     public string GetName() { return mName; }
     public float GetAttack() { return mAttack; }
@@ -34,11 +41,26 @@ public abstract class Character : MonoBehaviour
     public float GetMana() { return mCurrentMana; }
     public float GetChargingMana() { return mChargingMana; }
     public LifeSystem GetLifeSystem() { return mLifeSystem; } 
+    public bool isInGame() { return inGame; }
+    #endregion
+
+    #region buff
+    public void AddAttack(float addAttack , int numberOfRound) { mAttack += addAttack; } // le faire avec des routines
+    public void AddSpeed(float addSpeed, int numberOfRound) { mSpeed += addSpeed; }
+    public void AddMana(float amount)
+    {
+        mCurrentMana = Mathf.Min(mCurrentMana + amount, mMaxMana);
+        OnManaChanged?.Invoke(mCurrentMana); // Notifier les changements
+    }
+    #endregion
+
+    #region Setter
+    public void isInGame(bool new_Active) { inGame = new_Active; }
     #endregion
 
     private void Start()
     {
-        mLifeSystem = new LifeSystem(mMaxHealth , mDefense);
+        mLifeSystem.Init(mMaxHealth , mDefense);
     }
 
     private float CalculateTotalDamage()
@@ -50,34 +72,25 @@ public abstract class Character : MonoBehaviour
         if (isACriticalAttack)
         {
             baseDamage = Mathf.RoundToInt(baseDamage * mCriticalMultiplier);
-            Debug.Log($"Coup critique ! Dégâts : {baseDamage}");
+            Debug.Log("Coup critique ! Dégâts" + baseDamage);
         }
         return baseDamage;
     }
 
-    public virtual void Attack(Character target)
-    {
-        Debug.Log($"{mName} attaque {target.GetName()} !");
-    }
-
-    public virtual void Competence(Character target)
-    {
-        Debug.Log($"{mName} utilise une compétence spéciale sur {target.GetName()} !");
-    }
-
-    public virtual void Ultimate(Character target)
-    {
-        Debug.Log($"{mName} utilise son ultime sur {target.GetName()} !");
-    }
+    #region Virtual Function
+    public virtual void Attack(Character target){}
+    public virtual void Competence(Character target){}
+    public virtual void Ultimate(Character target) {}
+    #endregion
 
     public bool CanLaunchUltimate()
     {
         return mCurrentMana >= mMaxMana;
     }
 
-
-    public void RestartMana()
+    public void ResetMana()
     {
         mCurrentMana = 0;
+        OnManaChanged?.Invoke(mCurrentMana); // Notifier les changements
     }
 }
