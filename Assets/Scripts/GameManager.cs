@@ -218,6 +218,7 @@ public class GameManager : MonoBehaviour
 
     private void ExecuteAction(Character character, RectTransform selectedAction)
     {
+        
         if (selectedAction == mRotatingSelection.GetAttackCircle())
         {
             Debug.Log("Action confirm�e : Attaque sur " + mCurrentSelectedEnnemy.name);
@@ -254,6 +255,7 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
 
     private IEnumerator WaitForActionSelection(Character character)
     {
