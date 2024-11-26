@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,6 +11,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private float deselectedScale = 1f;
     [SerializeField] private float animationSpeed = 0.2f;
 
+    [Header("Skill Points UI")]
+    [SerializeField] private List<GameObject> skillPointObjects;
+    [SerializeField] private AnimationCurve bounceAnimationCurve;
+
     private int uiCount = 0;
 
     private List<PlayerUIManager> playerUIs;
@@ -17,6 +22,10 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         playerUIs = new();
+        for (int i = 0; i < skillPointObjects.Count; i++)
+        {
+            skillPointObjects[i].GetComponent<SkillPointAnimation>().setCurve(bounceAnimationCurve);
+        }
     }
 
     public void AssignPlayerUI(Player player)
@@ -44,6 +53,29 @@ public class UIManager : MonoBehaviour
         }
 
         uiCount++; 
+    }
+
+    public void UpdateSkillPointsUI(int currentPoints)
+    {
+        for (int i = 0; i < skillPointObjects.Count; i++)
+        {
+            if (i < currentPoints)
+            {
+                if (!skillPointObjects[i].activeSelf)
+                {
+                    skillPointObjects[i].SetActive(true);
+                    
+                }
+                else
+                {
+                    skillPointObjects[i].GetComponent<SkillPointAnimation>().setCurve(bounceAnimationCurve);
+                }
+            }
+            else
+            {
+                skillPointObjects[i].SetActive(false);
+            }
+        }
     }
 
     public void UIvisibility(bool isActive)

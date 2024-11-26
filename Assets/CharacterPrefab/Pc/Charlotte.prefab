@@ -68,6 +68,8 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 65d73bebb9a4a6d4081a2c05cd695212, type: 2}
+  - {fileID: 2100000, guid: bcc751baa8efc9741ba255d3ecef532a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -160,6 +162,8 @@ MonoBehaviour:
   mCurrentMana: 0
   mChargingMana: 0
   mLifeSystem: {fileID: 7796179437844390993}
+  CompetenceOnAllies: 0
+  UltimateOnAllies: 0
 --- !u!114 &7796179437844390993
 MonoBehaviour:
   m_ObjectHideFlags: 0

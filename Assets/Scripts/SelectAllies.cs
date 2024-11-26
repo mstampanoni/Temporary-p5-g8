@@ -1,65 +1,64 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SelectEnemy : MonoBehaviour
+public class SelectAllies : MonoBehaviour
 {
     #region Init value
-    private Enemy selectedEnemy;
-    private Enemy confirmedSelectedEnemy;
+    private Player selectedAlly;
+    private Player confirmedSelectedAlly;
 
-    private List<Enemy> allEnemies;
+    private List<Player> allAllies;
     #endregion
 
     #region Getter
-    public Enemy GetSelectedEnemy()
+    public Player GetSelectedAlly()
     {
-        return selectedEnemy;
+        return selectedAlly;
     }
 
-    public Enemy GetConfirmed()
+    public Player GetConfirmed()
     {
-        return confirmedSelectedEnemy;
+        return confirmedSelectedAlly;
     }
     #endregion
 
-    public void SetAllEnemies(List<Enemy> activeEnemyList)
+    public void SetAllAllies(List<Player> activeAllies)
     {
-        allEnemies = activeEnemyList;
+        allAllies = activeAllies;
     }
 
     void Update()
     {
-        HandleEnemySelection();
-
+        HandleAllySelection();
         UpdateOutlines();
     }
 
-    private void HandleEnemySelection()
+    private void HandleAllySelection()
     {
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                Enemy enemy = hit.collider.GetComponent<Enemy>();
-                SetEnemyTarget(enemy);
+                Player ally = hit.collider.GetComponent<Player>();
+                SetAllyTarget(ally);
             }
         }
     }
 
     private void UpdateOutlines()
     {
-        foreach (Enemy enemy in allEnemies)
+        foreach (Player ally in allAllies)
         {
-            Renderer enemyRenderer = enemy.GetComponent<Renderer>();
+            Renderer allyRenderer = ally.GetComponent<Renderer>();
 
-            if (enemy == selectedEnemy)
+            if (ally == selectedAlly)
             {
-                EnableOutline(enemyRenderer);
+                EnableOutline(allyRenderer);
             }
             else
             {
-                DisableOutline(enemyRenderer);
+                DisableOutline(allyRenderer);
             }
         }
     }
@@ -70,7 +69,7 @@ public class SelectEnemy : MonoBehaviour
         {
             foreach (var material in renderer.materials)
             {
-                if (material.name.Contains("outlineEnemyMat"))
+                if (material.name.Contains("outlineAlliesMat"))
                 {
                     material.SetFloat("_on_off", 0);
                     break;
@@ -85,7 +84,7 @@ public class SelectEnemy : MonoBehaviour
         {
             foreach (var material in renderer.materials)
             {
-                if (material.name.Contains("outlineEnemyMat"))
+                if (material.name.Contains("outlineAlliesMat"))
                 {
                     material.SetFloat("_on_off", 1);
                     break;
@@ -94,20 +93,20 @@ public class SelectEnemy : MonoBehaviour
         }
     }
 
-    public void SetEnemyTarget(Enemy target)
+    public void SetAllyTarget(Player target)
     {
         if (target != null)
         {
-            if (target == selectedEnemy && confirmedSelectedEnemy == null)
+            if (target == selectedAlly && confirmedSelectedAlly == null)
             {
-                confirmedSelectedEnemy = target;
+                confirmedSelectedAlly = target;
             }
-            else if (target != selectedEnemy)
+            else if (target != selectedAlly)
             {
-                confirmedSelectedEnemy = null;
-                selectedEnemy = target;
+                confirmedSelectedAlly = null;
+                selectedAlly = target;
 
-                Debug.Log("Ennemi sélectionné : " + target.name);
+                Debug.Log("Allié sélectionné : " + target.name);
             }
         }
     }

@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using static UnityEngine.GraphicsBuffer;
 using static Cinemachine.CinemachineTargetGroup;
+using System.Collections.Generic;
 
 public class PlayerUIManager : MonoBehaviour
 {
@@ -46,13 +47,14 @@ public class PlayerUIManager : MonoBehaviour
         Button ultimateButton = manaSlider.GetComponent<Button>();
         if (ultimateButton != null)
         {
-            ultimateButton.onClick.AddListener(() => OnUIButtonClick()); 
+            ultimateButton.onClick.AddListener(() => OnUIButtonClick());
         }
         else
         {
             Debug.LogError("Le bouton associé à l'image Ult n'a pas été trouvé.");
         }
     }
+
 
     private void UpdateHealthSlider(float currentHealth)
     {

@@ -28,6 +28,9 @@ public abstract class Character : MonoBehaviour
     [SerializeField] private LifeSystem mLifeSystem;
 
     private bool inGame = false;
+
+    [SerializeField] private bool CompetenceOnAllies;
+    [SerializeField] protected bool UltimateOnAllies;
     #endregion
 
     #region Getter
@@ -42,6 +45,8 @@ public abstract class Character : MonoBehaviour
     public float GetChargingMana() { return mChargingMana; }
     public LifeSystem GetLifeSystem() { return mLifeSystem; } 
     public bool isInGame() { return inGame; }
+    public bool isCompetenceTargetOnAllies() { return CompetenceOnAllies; }
+    public bool IsUltimateTargetOnAllies() { return UltimateOnAllies; }
     #endregion
 
     #region buff

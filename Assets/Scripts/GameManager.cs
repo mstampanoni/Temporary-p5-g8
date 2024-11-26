@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     [Header("Sous-Systèmes")]
     [SerializeField] private RotatingSelection mRotatingSelection;
     [SerializeField] private SelectEnemy mSelectEnemy;
+    [SerializeField] private SelectAllies mSelectAllies;
     [SerializeField] private UIManager mUIManager;
 
     private List<Character> mTurnQueue;
@@ -31,20 +32,28 @@ public class GameManager : MonoBehaviour
     private RectTransform confirmedAction = null;
     private bool actionConfirmed = false;
 
-    private Enemy mCurrentSelectedEnnemy;
+    private bool isSelectingAlly = false; 
+    private bool isSelectingEnemy = true; 
+    private Player mCurrentSelectedAlly;
+    private Enemy mCurrentSelectedEnemy;
 
     // Variables pour le mode ultimate
     private bool isInUltimateMode = false;
     private bool isWaitingForConfirmation = false;
 
+    //Compétence 
+    private int maxSkillPoints = 5; 
+    private int currentSkillPoints;
+
     #endregion
 
     private void Start()
     {
+        currentSkillPoints = 3;
         mTurnQueue = new();
         mActivePlayers = new();
         mActiveEnemies = new();
-        mCurrentSelectedEnnemy = null;
+        mCurrentSelectedEnemy = null;
         SetUpGame();
         WatchForActive();
     }
@@ -70,6 +79,124 @@ public class GameManager : MonoBehaviour
             AddToTurnQueue(enemy);
         }
     }
+
+    #region SelectionTarget
+   
+    private IEnumerator WaitForAllySelection(Character character, string actionType)
+    {
+        Debug.Log($"Sélection d'un allié pour l'action : {actionType}");
+
+        while (mCurrentSelectedAlly == null)
+        {
+            yield return null;
+        }
+
+        if (actionType == "competence")
+        {
+            Debug.Log("Compétence lancée sur l'allié : " + mCurrentSelectedAlly.name);
+            character.Competence(mCurrentSelectedAlly);
+        }
+        else if (actionType == "ultimate")
+        {
+            Debug.Log("Ultime lancé sur l'allié : " + mCurrentSelectedAlly.name);
+            character.Ultimate(mCurrentSelectedAlly);
+        }
+
+    }
+
+    private IEnumerator WaitForEnemySelection(Character character)
+    {
+        Debug.Log("Mode Ultimate activé. Sélectionnez un ennemi.");
+
+        while (isWaitingForConfirmation)
+        {
+            if (mSelectEnemy.GetConfirmed() != null)
+            {
+                Debug.Log("Ultimate lancé sur " + mSelectEnemy.GetConfirmed().name);
+                character.Ultimate(mSelectEnemy.GetConfirmed());
+                character.ResetMana();
+                EndUltimateMode();
+            }
+            yield return null;
+        }
+    }
+
+    private void UpdateSelectionMode(RectTransform selectedAction)
+    {
+        if (selectedAction == mRotatingSelection.GetAttackCircle())
+        {
+            // Si l'action est une attaque, on passe en mode ennemis
+            mSelectEnemy.SetAllEnemies(mActiveEnemies);
+            Debug.Log("Mode sélection d'ennemis activé.");
+        }
+        else if (selectedAction == mRotatingSelection.GetCompetenceCircle())
+        {
+            // Si l'action est une compétence
+            if (currentSkillPoints > 0)
+            {
+                if (mTurnQueue[0].isCompetenceTargetOnAllies())
+                {
+                    mSelectAllies.SetAllAllies(mActivePlayers);
+                    Debug.Log("Mode sélection d'alliés activé.");
+                }
+                else
+                {
+                    mSelectEnemy.SetAllEnemies(mActiveEnemies);
+                    Debug.Log("Mode sélection d'ennemis activé.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Pas assez de points de compétence !");
+            }
+        }
+    }
+
+    private IEnumerator WaitForTargetSelection(Character character, string actionType)
+    {
+        Debug.Log($"Mode {actionType} activé. Sélectionnez une cible.");
+
+        while (!actionConfirmed)
+        {
+            RectTransform newSelection = mRotatingSelection.GetSelected();
+
+            if (newSelection != null && newSelection != selectedAction)
+            {
+                selectedAction = newSelection;
+                UpdateSelectionMode(selectedAction); // Basculer entre alliés et ennemis
+            }
+
+            if (selectedAction == mRotatingSelection.GetAttackCircle() && mCurrentSelectedEnemy != null)
+            {
+                Debug.Log($"Cible ennemie potentielle : {mCurrentSelectedEnemy.name}");
+            }
+            else if (selectedAction == mRotatingSelection.GetCompetenceCircle() && mCurrentSelectedAlly != null)
+            {
+                Debug.Log($"Cible alliée potentielle : {mCurrentSelectedAlly.name}");
+            }
+
+            yield return null;
+        }
+
+        // Confirmation de l'action une fois la cible validée
+        if (actionType == "ultimate")
+        {
+            if (selectedAction == mRotatingSelection.GetAttackCircle() && mCurrentSelectedEnemy != null)
+            {
+                Debug.Log($"Ultime lancé sur l'ennemi : {mCurrentSelectedEnemy.name}");
+                character.Ultimate(mCurrentSelectedEnemy);
+            }
+            else if (selectedAction == mRotatingSelection.GetCompetenceCircle() && mCurrentSelectedAlly != null)
+            {
+                Debug.Log($"Ultime lancé sur l'allié : {mCurrentSelectedAlly.name}");
+                character.Ultimate(mCurrentSelectedAlly);
+            }
+        }
+
+        EndUltimateMode();
+    }
+
+    #endregion
 
     private void WatchForActive()
     {
@@ -111,16 +238,18 @@ public class GameManager : MonoBehaviour
                         if (enemy.GetLifeSystem().IsAlive())
                         {
                             mActiveEnemies.Add(enemy);
-                            if (mCurrentSelectedEnnemy == null)
+                            if (mCurrentSelectedEnemy == null)
                             {
-                                mCurrentSelectedEnnemy = enemy;
-                                mSelectEnemy.SetEnemyTarget(mCurrentSelectedEnnemy);
+                                mCurrentSelectedEnemy = enemy;
+                                mSelectEnemy.SetEnemyTarget(mCurrentSelectedEnemy);
                             }
                         }
                     }
                 }
             }
         }
+
+        //mSelectAllies.SetAllAllies(mActivePlayers);
     }
 
     private void AddToTurnQueue(GameObject characterObject)
@@ -146,19 +275,17 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        mSelectEnemy.SetAllEnemies( mActiveEnemies );
         WatchForActive();
+
+        UpdateSkillPointsUI();
+
         if (!isTurnCycleRunning)
         {
             StartTurnCycle();
         }
-        else
+        else if (!isRunningCoroutine)
         {
-            mCurrentSelectedEnnemy = mSelectEnemy.GetSelectedEnemy();
-            if (!isRunningCoroutine)
-            {
-                StartCoroutine(RunTurnCycle());
-            }
+            StartCoroutine(RunTurnCycle());
         }
     }
 
@@ -187,39 +314,75 @@ public class GameManager : MonoBehaviour
             if (character.CanLaunchUltimate() && !isInUltimateMode)
             {
                 StartUltimateMode();
-                StartCoroutine(WaitForEnemySelection(character)); 
+
+                // Initialisation de la sélection en fonction de la cible par défaut
+                RectTransform initialAction = mRotatingSelection.GetCompetenceCircle(); // Par exemple, compétence
+                if (!character.IsUltimateTargetOnAllies())
+                {
+                    initialAction = mRotatingSelection.GetAttackCircle(); // Sinon attaque
+                }
+
+                selectedAction = initialAction;
+                UpdateSelectionMode(selectedAction); // Détermine la cible initiale (allié ou ennemi)
+
+                // Attente de confirmation dynamique
+                StartCoroutine(WaitForTargetSelection(character, "ultimate"));
             }
         }
     }
 
-    private IEnumerator WaitForEnemySelection(Character character)
+
+
+    #region SkillPoint
+    private void UpdateSkillPointsUI()
     {
-        Debug.Log("Mode Ultimate activé. Sélectionnez un ennemi.");
+        mUIManager.UpdateSkillPointsUI(currentSkillPoints); 
+    }
 
-        while (isWaitingForConfirmation)
+    private bool UseSkillPoint()
+    {
+        if (currentSkillPoints > 0)
         {
-            if (mSelectEnemy.GetConfirmed() != null) 
-            {
-                Debug.Log("Ultimate lancé sur " + mSelectEnemy.GetConfirmed().name);
-                character.Ultimate(mSelectEnemy.GetConfirmed());
-                character.ResetMana();
-                EndUltimateMode();
-            }
-            yield return null;
+            currentSkillPoints--;
+            UpdateSkillPointsUI();
+            return true;
+        }
+        return false;
+    }
+
+    private void GainSkillPoint()
+    {
+        if (currentSkillPoints < maxSkillPoints)
+        {
+            currentSkillPoints++;
+            UpdateSkillPointsUI();
         }
     }
+    #endregion
 
     private void ExecuteAction(Character character, RectTransform selectedAction)
     {
         if (selectedAction == mRotatingSelection.GetAttackCircle())
         {
-            Debug.Log("Action confirmée : Attaque sur " + mCurrentSelectedEnnemy.name);
-            character.Attack(mCurrentSelectedEnnemy);
+            Debug.Log("Action confirmée : Attaque sur " + mCurrentSelectedEnemy.name);
+            character.Attack(mCurrentSelectedEnemy);
+            GainSkillPoint();
         }
         else if (selectedAction == mRotatingSelection.GetCompetenceCircle())
         {
-            Debug.Log("Action confirmée : Compétence sur " + mCurrentSelectedEnnemy.name);
-            character.Competence(mCurrentSelectedEnnemy);
+            if (UseSkillPoint())
+            {
+                if (character.isCompetenceTargetOnAllies())
+                {
+                    Debug.Log("Action confirmée : Compétence sur " + mCurrentSelectedAlly.name);
+                    character.Competence(mCurrentSelectedAlly);
+                }
+                else
+                {
+                    Debug.Log("Action confirmée : Compétence sur " + mCurrentSelectedEnemy.name);
+                    character.Competence(mCurrentSelectedEnemy);
+                }
+            }
         }
         else
         {
@@ -229,6 +392,7 @@ public class GameManager : MonoBehaviour
         actionConfirmed = false;
         mRotatingSelection.setConfirmedActionNull();
     }
+
 
     public void OnClickAction()
     {
@@ -244,9 +408,11 @@ public class GameManager : MonoBehaviour
             if (tempAction != null && tempAction != selectedAction)
             {
                 selectedAction = tempAction;
+                UpdateSelectionMode(selectedAction); // Mise à jour du mode
             }
         }
     }
+
 
     private IEnumerator WaitForActionSelection(Character character)
     {
@@ -256,17 +422,28 @@ public class GameManager : MonoBehaviour
         if (mRotatingSelection != null)
         {
             selectedAction = mRotatingSelection.GetSelected();
+            UpdateSelectionMode(selectedAction);
         }
 
         while (!actionConfirmed)
         {
+            RectTransform newSelection = mRotatingSelection.GetSelected();
+
+            if (newSelection != null && newSelection != selectedAction)
+            {
+                selectedAction = newSelection;
+                UpdateSelectionMode(selectedAction); // Basculer la cible en fonction de la nouvelle action
+            }
+
             if (selectedAction != null)
             {
                 Debug.Log("Action potentielle sélectionnée : " +
                           (selectedAction == mRotatingSelection.GetAttackCircle() ? "Attaque" : "Compétence"));
             }
+
             yield return null;
         }
+
         ExecuteAction(character, confirmedAction);
     }
 
