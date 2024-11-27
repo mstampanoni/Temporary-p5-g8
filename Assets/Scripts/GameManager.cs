@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform[] mPlayerPositions;
     [SerializeField] private Transform[] mEnemyPositions;
 
-    [Header("Sous-Systèmes")]
+    [Header("Sous-Systï¿½mes")]
     [SerializeField] private RotatingSelection mRotatingSelection;
     [SerializeField] private SelectEnemy mSelectEnemy;
     [SerializeField] private SelectAllies mSelectAllies;
@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     private List<Player> mActivePlayers;
     private List<Enemy> mActiveEnemies;
 
-    //Lié au choix des actions
+    //Liï¿½ au choix des actions
     private RectTransform selectedAction = null;
     private RectTransform confirmedAction = null;
     private bool actionConfirmed = false;
@@ -44,9 +44,11 @@ public class GameManager : MonoBehaviour
     private bool isInUltimateMode = false;
     private bool isWaitingForConfirmation = false;
 
-    //Compétence 
+    //Compï¿½tence 
     private int maxSkillPoints = 5; 
     private int currentSkillPoints;
+    // cam link
+    private LogicCam mLogicCam;
     #endregion
 
     private void Start()
@@ -63,6 +65,8 @@ public class GameManager : MonoBehaviour
 
     private void SetUpGame()
     {
+        mLogicCam = GameObject.FindWithTag("LogicCam").GetComponent<LogicCam>();
+
         GameObject pcContainer = GameObject.Find("Character/pc");
         GameObject npcContainer = GameObject.Find("Character/npc");
 
@@ -81,6 +85,10 @@ public class GameManager : MonoBehaviour
             enemy.GetComponent<Enemy>().isInGame(true);
             AddToTurnQueue(enemy);
         }
+
+        mLogicCam.RegisterCharcater(mTurnQueue);
+        mLogicCam.Init();
+
     }
 
     #region SelectionTarget
@@ -93,7 +101,7 @@ public class GameManager : MonoBehaviour
             {
                 GiveFirstEnemy();
             }
-            Debug.Log("Mode sélection d'ennemis activé.");
+            Debug.Log("Mode sï¿½lection d'ennemis activï¿½.");
         }
 
         else if (selectedAction == mRotatingSelection.GetCompetenceCircle())
@@ -108,7 +116,7 @@ public class GameManager : MonoBehaviour
                     {
                         GiveFirstAlly();
                     }
-                    Debug.Log("Mode sélection d'alliés activé.");
+                    Debug.Log("Mode sï¿½lection d'alliï¿½s activï¿½.");
                 }
                 else
                 {
@@ -118,12 +126,12 @@ public class GameManager : MonoBehaviour
                     {
                         GiveFirstEnemy();
                     }
-                    Debug.Log("Mode sélection d'ennemis activé.");
+                    Debug.Log("Mode sï¿½lection d'ennemis activï¿½.");
                 }
             }
             else
             {
-                Debug.LogWarning("Pas assez de points de compétence !");
+                Debug.LogWarning("Pas assez de points de compï¿½tence !");
             }
         }
     }
@@ -138,7 +146,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Aucun ennemi actif disponible pour la sélection.");
+            Debug.LogWarning("Aucun ennemi actif disponible pour la sï¿½lection.");
         }
     }
 
@@ -152,7 +160,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Aucun ennemi actif disponible pour la sélection.");
+            Debug.LogWarning("Aucun ennemi actif disponible pour la sï¿½lection.");
         }
     }
     #endregion
@@ -161,7 +169,7 @@ public class GameManager : MonoBehaviour
     {
         Character target = null;
 
-        Debug.Log("Mode sélection activé. Veuillez choisir une cible.");
+        Debug.Log("Mode sï¿½lection activï¿½. Veuillez choisir une cible.");
 
         while (!actionConfirmed)
         {
@@ -185,7 +193,7 @@ public class GameManager : MonoBehaviour
                     {
                         if (mCurrentSelectedAlly != null)
                         {
-                            Debug.Log($"Cible alliée potentielle : {mCurrentSelectedAlly.name}");
+                            Debug.Log($"Cible alliï¿½e potentielle : {mCurrentSelectedAlly.name}");
                             target = mCurrentSelectedAlly;
                         }
                     }
@@ -201,7 +209,7 @@ public class GameManager : MonoBehaviour
                     {
                         if (currentCharacter.isCompetenceTargetOnAllies() && mCurrentSelectedAlly != null)
                         {
-                            Debug.Log($"Cible alliée potentielle : {mCurrentSelectedAlly.name}");
+                            Debug.Log($"Cible alliï¿½e potentielle : {mCurrentSelectedAlly.name}");
                             target = mCurrentSelectedAlly;
                         }
                         else if (mCurrentSelectedEnemy != null)
@@ -219,7 +227,7 @@ public class GameManager : MonoBehaviour
         {
             if (target != null)
             {
-                Debug.Log($"Ultime lancé sur : {target.GetName()}");
+                Debug.Log($"Ultime lancï¿½ sur : {target.GetName()}");
                 currentCharacter.Ultimate(target);
                 currentCharacter.ResetMana();
                 EndUltimateMode();
@@ -326,7 +334,7 @@ public class GameManager : MonoBehaviour
     {
         isInUltimateMode = true;
         isWaitingForConfirmation = true;
-        Debug.Log("Mode ultimate activé. Veuillez confirmer l'ennemi.");
+        Debug.Log("Mode ultimate activï¿½. Veuillez confirmer l'ennemi.");
 
         mUIManager.UIvisibility(false);
     }
@@ -335,7 +343,7 @@ public class GameManager : MonoBehaviour
     {
         isInUltimateMode = false;
         isWaitingForConfirmation = false;
-        Debug.Log("Mode ultimate desactivé.");
+        Debug.Log("Mode ultimate desactivï¿½.");
 
         mUIManager.UIvisibility(true);
     }
@@ -396,7 +404,7 @@ public class GameManager : MonoBehaviour
         {
             if (target != null)
             {
-                Debug.Log($"Action confirmée : Attaque sur {target.name}");
+                Debug.Log($"Action confirmï¿½e : Attaque sur {target.name}");
                 character.Attack(target);
                 GainSkillPoint(); 
             }
@@ -409,7 +417,7 @@ public class GameManager : MonoBehaviour
                 {
                     if (target != null)
                     {
-                        Debug.Log($"Action confirmée : Compétence sur l'allié {target.name}");
+                        Debug.Log($"Action confirmï¿½e : Compï¿½tence sur l'alliï¿½ {target.name}");
                         character.Competence(target);
                     }
                 }
@@ -417,19 +425,19 @@ public class GameManager : MonoBehaviour
                 {
                     if (target != null)
                     {
-                        Debug.Log($"Action confirmée : Compétence sur l'ennemi {target.name}");
+                        Debug.Log($"Action confirmï¿½e : Compï¿½tence sur l'ennemi {target.name}");
                         character.Competence(target);
                     }
                 }
             }
             else
             {
-                Debug.LogWarning("Pas assez de points de compétence !");
+                Debug.LogWarning("Pas assez de points de compï¿½tence !");
             }
         }
         else
         {
-            Debug.LogWarning("Aucune action valide n'a été sélectionnée.");
+            Debug.LogWarning("Aucune action valide n'a ï¿½tï¿½ sï¿½lectionnï¿½e.");
         }
 
         actionConfirmed = false;
@@ -456,7 +464,7 @@ public class GameManager : MonoBehaviour
 
     private void StartTurnCycle()
     {
-        Debug.Log("Début du cycle de tours.");
+        Debug.Log("Dï¿½but du cycle de tours.");
         mGlobalMin = 0f;
         isTurnCycleRunning = true;
         isRunningCoroutine = false;
@@ -484,8 +492,10 @@ public class GameManager : MonoBehaviour
 
                 if (character.GetSpeed() >= mGlobalMin)
                 {
-                    Debug.Log("Personnage prêt à jouer : " + character.GetName());
+                    Debug.Log("Personnage prï¿½t ï¿½ jouer : " + character.GetName());
                     currentCharacter = character;
+                    mLogicCam.SwitchTarget(character.name);
+
                     anyonePlayed = true;
 
                     yield return StartCoroutine(WaitForTargetSelection());
@@ -495,7 +505,7 @@ public class GameManager : MonoBehaviour
             if (!anyonePlayed)
             {
                 currentCharacter = null;
-                Debug.Log("Fin du cycle, aucun personnage ne peut jouer. Réinitialisation.");
+                Debug.Log("Fin du cycle, aucun personnage ne peut jouer. Rï¿½initialisation.");
                 mGlobalMin = 0f;
             }
 
