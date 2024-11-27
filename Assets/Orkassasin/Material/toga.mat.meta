@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 342d0887258ba354fa09b006d40e2493
+timeCreated: 1524330124
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 117169
+  packageName: orks assasin
+  packageVersion: 1.0
+  assetPath: Assets/Orkassasin/Material/toga.mat
+  uploadId: 241905

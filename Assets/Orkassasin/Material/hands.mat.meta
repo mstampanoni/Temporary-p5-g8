@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 534fb73a9cd55c74e94d1bd028351354
+timeCreated: 1524330073
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 117169
+  packageName: orks assasin
+  packageVersion: 1.0
+  assetPath: Assets/Orkassasin/Material/hands.mat
+  uploadId: 241905

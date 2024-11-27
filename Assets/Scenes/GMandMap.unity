@@ -1024,6 +1024,7 @@ MonoBehaviour:
   - {fileID: 8285271239948507561, guid: dd94a57ddc362964d9298dc5e21219ff, type: 3}
   - {fileID: 6278054709642768575, guid: 4bd071f8d3af84c4bb64a3aa7c5d0f2e, type: 3}
   - {fileID: 3040884690538020181, guid: e0e48479230aa2f43a147c63bf688664, type: 3}
+  - {fileID: 1637584495559616, guid: ba2926d80e1466444936c24a1fa5aec7, type: 3}
   mEnemyPrefabs:
   - {fileID: 6032133984504754570, guid: 790f7beb1494c394a8221dbceb448e06, type: 3}
   - {fileID: 6032133984504754570, guid: bb2b70aed2cd3084fbb4d8c89eeec1be, type: 3}
@@ -1031,6 +1032,7 @@ MonoBehaviour:
   - {fileID: 618465863}
   - {fileID: 1177084657}
   - {fileID: 141743524}
+  - {fileID: 1931582727}
   mEnemyPositions:
   - {fileID: 1015107306}
   - {fileID: 1017894789}

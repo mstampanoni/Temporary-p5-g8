@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 25812571b789f924da40592236c4cdf0
+timeCreated: 1524330098
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 117169
+  packageName: orks assasin
+  packageVersion: 1.0
+  assetPath: Assets/Orkassasin/Material/helm.mat
+  uploadId: 241905
