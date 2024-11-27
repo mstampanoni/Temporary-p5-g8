@@ -30,7 +30,7 @@ public abstract class Character : MonoBehaviour
     private bool inGame = false;
 
     [SerializeField] private bool CompetenceOnAllies;
-    [SerializeField] protected bool UltimateOnAllies;
+    [SerializeField] private bool UltimateOnAllies;
     #endregion
 
     #region Getter

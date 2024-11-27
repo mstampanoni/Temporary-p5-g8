@@ -114,6 +114,8 @@ public class RotatingSelection : MonoBehaviour
     {
         return mCompetenceCircle;
     }
+
+    public RectTransform GetPreviousSelected() { return mPreviousSelected; }   
     #endregion
 
     #region Setter

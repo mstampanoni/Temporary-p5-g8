@@ -988,6 +988,7 @@ GameObject:
   - component: {fileID: 484433122}
   - component: {fileID: 484433121}
   - component: {fileID: 484433120}
+  - component: {fileID: 484433123}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1035,6 +1036,7 @@ MonoBehaviour:
   - {fileID: 1017894789}
   mRotatingSelection: {fileID: 1887063702}
   mSelectEnemy: {fileID: 484433120}
+  mSelectAllies: {fileID: 484433123}
   mUIManager: {fileID: 1887063700}
 --- !u!4 &484433122
 Transform:
@@ -1054,6 +1056,18 @@ Transform:
   - {fileID: 1887063701}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &484433123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 484433119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 888d3669171895a4c953a77738b2a479, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &555973786
 GameObject:
   m_ObjectHideFlags: 0

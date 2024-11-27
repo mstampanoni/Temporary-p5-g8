@@ -7,30 +7,31 @@ public class SelectEnemy : MonoBehaviour
     private Enemy selectedEnemy;
     private Enemy confirmedSelectedEnemy;
 
-    private List<Enemy> allEnemies;
+    private List<Enemy> allEnemies = new();
     #endregion
 
     #region Getter
-    public Enemy GetSelectedEnemy()
-    {
-        return selectedEnemy;
-    }
+    public Enemy GetSelectedEnemy() => selectedEnemy;
+    public Enemy GetConfirmed() => confirmedSelectedEnemy;
+    #endregion
 
-    public Enemy GetConfirmed()
+    #region Setter
+    public void resetEnnemySelection()
     {
-        return confirmedSelectedEnemy;
+        selectedEnemy = null;
+        confirmedSelectedEnemy = null;
     }
     #endregion
 
     public void SetAllEnemies(List<Enemy> activeEnemyList)
     {
         allEnemies = activeEnemyList;
+        UpdateOutlines(); // Réinitialise les outlines lors de la mise à jour de la liste
     }
 
     void Update()
     {
         HandleEnemySelection();
-
         UpdateOutlines();
     }
 
@@ -106,7 +107,6 @@ public class SelectEnemy : MonoBehaviour
             {
                 confirmedSelectedEnemy = null;
                 selectedEnemy = target;
-
                 Debug.Log("Ennemi sélectionné : " + target.name);
             }
         }

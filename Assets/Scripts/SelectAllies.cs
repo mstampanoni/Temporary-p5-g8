@@ -7,24 +7,26 @@ public class SelectAllies : MonoBehaviour
     private Player selectedAlly;
     private Player confirmedSelectedAlly;
 
-    private List<Player> allAllies;
+    private List<Player> allAllies = new();
     #endregion
 
     #region Getter
-    public Player GetSelectedAlly()
-    {
-        return selectedAlly;
-    }
+    public Player GetSelectedAlly() => selectedAlly;
+    public Player GetConfirmed() => confirmedSelectedAlly;
+    #endregion
 
-    public Player GetConfirmed()
+    #region Setter
+    public void resetAllySelection()
     {
-        return confirmedSelectedAlly;
+        selectedAlly = null;
+        confirmedSelectedAlly = null;
     }
     #endregion
 
     public void SetAllAllies(List<Player> activeAllies)
     {
         allAllies = activeAllies;
+        UpdateOutlines();
     }
 
     void Update()
@@ -105,7 +107,6 @@ public class SelectAllies : MonoBehaviour
             {
                 confirmedSelectedAlly = null;
                 selectedAlly = target;
-
                 Debug.Log("Allié sélectionné : " + target.name);
             }
         }
