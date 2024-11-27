@@ -12,8 +12,8 @@ public class LogicCam : MonoBehaviour
     private CinemachineFreeLook mOrbitalCam;
 
     private List<Character> mCharacters;
-
-    void Start()
+    
+    public void Init()
     {
         SwitchTarget(mCharacters[0].name);
     }

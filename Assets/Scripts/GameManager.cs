@@ -75,6 +75,7 @@ public class GameManager : MonoBehaviour
         }
 
         mLogicCam.RegisterCharcater(mTurnQueue);
+        mLogicCam.Init();
 
     }
 
