@@ -44,6 +44,7 @@ public class SkeletonMage : Player
 
     private void Start()
     {
+        base.Start();
         animator.SetBool("idle_combat", true);
 
         mAttackAnimName = "attack_short_001";

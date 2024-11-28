@@ -63,7 +63,7 @@ public abstract class Character : MonoBehaviour
     public void isInGame(bool new_Active) { inGame = new_Active; }
     #endregion
 
-    private void Start()
+    public void Start()
     {
         mLifeSystem.Init(mMaxHealth , mDefense);
     }
