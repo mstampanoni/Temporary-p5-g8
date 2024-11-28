@@ -15,6 +15,12 @@ public class Environement : MonoBehaviour
     [SerializeField]
     private List<Transform> lightningPos;
 
+    [SerializeField]
+    private Material defaultSkyBox;
+
+    [SerializeField]
+    private Material stormSkyBox;
+
     private Coroutine coroutine;
 
 
@@ -34,6 +40,8 @@ public class Environement : MonoBehaviour
             {
                 StopCoroutine(coroutine);
                 coroutine = null;
+
+                RenderSettings.skybox = defaultSkyBox;
             }
 
         }
@@ -41,6 +49,7 @@ public class Environement : MonoBehaviour
 
     private IEnumerator LightningStrikes()
     {
+        RenderSettings.skybox = stormSkyBox;
 
         while (gameManager.isInUltMode())
         {
