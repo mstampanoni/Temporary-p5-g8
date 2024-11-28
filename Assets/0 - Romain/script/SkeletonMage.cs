@@ -58,7 +58,7 @@ public class SkeletonMage : Player
     {
         Vector3 oldPos = target.gameObject.transform.position;
 
-        target.gameObject.transform.position.Set(mUltPlaceholder.position.x, mUltPlaceholder.position.y, mUltPlaceholder.position.z);
+        target.gameObject.transform.position = new Vector3(mUltPlaceholder.position.x, mUltPlaceholder.position.y, mUltPlaceholder.position.z);
 
         mCameraUltimate.LookAt = target.gameObject.transform;
 
@@ -79,7 +79,8 @@ public class SkeletonMage : Player
 
         mCameraUltimate.Priority = 0;
 
-        target.gameObject.transform.position.Set(oldPos.x, oldPos.y , oldPos.z);
+        target.gameObject.transform.position = new Vector3(oldPos.x, oldPos.y , oldPos.z);
+
     }
 
     private IEnumerator SyncAttack(int attackId, Character target)

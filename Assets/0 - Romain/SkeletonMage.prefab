@@ -10903,7 +10903,7 @@ MonoBehaviour:
   mCriticalChance: 20
   mCriticalMultiplier: 2
   mMaxMana: 100
-  mCurrentMana: 0
+  mCurrentMana: 100
   mChargingMana: 25
   mLifeSystem: {fileID: 3479680844573744154}
   CompetenceOnAllies: 0
