@@ -5278,7 +5278,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mName: FeetSniffer
   mMaxHealth: 100
-  mAttack: 25
+  mAttack: 0
   mDefense: 20
   mSpeed: 50
   mCriticalChance: 0
@@ -5291,14 +5291,17 @@ MonoBehaviour:
   UltimateOnAllies: 0
   animator: {fileID: 95036879989758482}
   Slash: {fileID: 7603100771152400377, guid: b8a07a6b39d83ea478f7b07a1f757463, type: 3}
+  GreenSlash: {fileID: 7732845257626421959, guid: 98af4d6dab2f34e4eb4675902479b6f4,
+    type: 3}
   Target: {fileID: 0}
   WeaponLeft: {fileID: 1036637056453866}
   WeaponRight: {fileID: 1554863368748708}
   WeaponLeftReal: {fileID: 1266703147035016}
   WeaponRightReal: {fileID: 1957766209817448}
   DaggerGreenMat: {fileID: 2100000, guid: 731893bfd0c95c94fa7b220d9ae73ac2, type: 2}
-  daggerEffect: {fileID: 4948618327318019853, guid: a5fff78b6cc35c24395f1d3d67619cb5,
+  daggerEffect: {fileID: 2445269005738336694, guid: bb374d571b7de5e49b7be4e328d4a62c,
     type: 3}
+  poison: 0
 --- !u!114 &-4939089872309223380
 MonoBehaviour:
   m_ObjectHideFlags: 0

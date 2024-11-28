@@ -8,6 +8,7 @@ public class OrkPlayer : Player
 {
     public Animator animator;
     public GameObject Slash;
+    public GameObject GreenSlash;
     public Character Target;
     public GameObject WeaponLeft;
     public GameObject WeaponRight;
@@ -18,6 +19,9 @@ public class OrkPlayer : Player
     public Material DaggerGreenMat;
 
     public GameObject daggerEffect;
+    public bool poison = false;
+
+
 
     public override void Attack(Character target)
     {
@@ -29,9 +33,15 @@ public class OrkPlayer : Player
 
     public override void Competence(Character target)
     {
+
+        if (poison == false)
+        {
+            poison = true;
+        }
+        
+
         Debug.Log(GetName() + "utilise une comp�tence sp�ciale sur" + target.GetName() + "!");
-
-
+        Target = target;
         animator.Play("PointDagger");
 
 
@@ -40,7 +50,7 @@ public class OrkPlayer : Player
     public override void Ultimate(Character target)
     {
         Debug.Log(GetName() + "utilise son ultime sur");
-
+        Target = target;
         animator.Play("TauntCry");
     }
 
@@ -56,11 +66,19 @@ public class OrkPlayer : Player
 
     private void GenerateSlashFromWeapon(GameObject weapon)
     {
-        if (Target == null)
+
+        GameObject slash;
+
+        if (poison)
         {
-            Debug.Log("NoTarget");
-            return;
+            slash = GreenSlash;
         }
+        else
+        {
+            slash = Slash;
+        }
+
+        
 
         // R�cup�rer les positions de l'arme et de la cible
         Vector3 weaponPosition = weapon.transform.position;
@@ -70,7 +88,7 @@ public class OrkPlayer : Player
         Vector3 slashPosition = weaponPosition + (targetPosition - weaponPosition);
 
         // Instancier le Slash � la position calcul�e avec la rotation de l'arme
-        Instantiate(Slash, slashPosition, weapon.transform.rotation);
+        Instantiate(slash, slashPosition, weapon.transform.rotation);
 
         Debug.Log("Slash instantiated at: " + slashPosition);
     }
@@ -86,8 +104,11 @@ public class OrkPlayer : Player
         // Positionner et lancer l'effet de particules sur WeaponLeft
         GameObject effect = Instantiate(daggerEffect, WeaponLeft.transform.position, WeaponLeft.transform.rotation);
 
+
         WeaponLeftReal.GetComponent<Renderer>().material = DaggerGreenMat;
         WeaponRightReal.GetComponent<Renderer>().material = DaggerGreenMat;
+
+        
     }
 
 }
