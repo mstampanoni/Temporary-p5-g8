@@ -28,4 +28,19 @@ public class OrkPlayer : Player
 
         animator.Play("TauntCry");
     }
+
+    public void GenerateSlash()
+    {
+        if (gameObject.GetComponent<Transform>().Find("weapon2_left")== null)
+        {
+            Debug.Log("WeaponLeft Failed find");
+        }
+
+        if (gameObject.GetComponent<Transform>().Find("weapon2_right") == null)
+        {
+            Debug.Log("WeaponRight Failed find" );
+        }
+
+    }
+
 }
