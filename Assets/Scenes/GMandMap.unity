@@ -1506,7 +1506,7 @@ MonoBehaviour:
   mPlayerPrefabs:
   - {fileID: 8285271239948507561, guid: dd94a57ddc362964d9298dc5e21219ff, type: 3}
   - {fileID: 6278054709642768575, guid: 4bd071f8d3af84c4bb64a3aa7c5d0f2e, type: 3}
-  - {fileID: 3040884690538020181, guid: e0e48479230aa2f43a147c63bf688664, type: 3}
+  - {fileID: 1637584495559616, guid: 3cdf5a0408220754f9065e4a6514ad3e, type: 3}
   - {fileID: 4565567381804635772, guid: 46b88374514deb64c9e62589b18075c3, type: 3}
   mEnemyPrefabs:
   - {fileID: 6032133984504754570, guid: 790f7beb1494c394a8221dbceb448e06, type: 3}

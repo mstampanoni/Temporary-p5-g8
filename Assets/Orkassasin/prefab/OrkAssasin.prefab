@@ -5289,6 +5289,7 @@ MonoBehaviour:
   mLifeSystem: {fileID: -4939089872309223380}
   CompetenceOnAllies: 0
   UltimateOnAllies: 0
+  animator: {fileID: 95036879989758482}
 --- !u!114 &-4939089872309223380
 MonoBehaviour:
   m_ObjectHideFlags: 0
