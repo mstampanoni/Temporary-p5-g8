@@ -159,7 +159,7 @@ MonoBehaviour:
   mCriticalChance: 0
   mCriticalMultiplier: 0
   mMaxMana: 100
-  mCurrentMana: 0
+  mCurrentMana: 100
   mChargingMana: 0
   mLifeSystem: {fileID: 7796179437844390993}
   CompetenceOnAllies: 0

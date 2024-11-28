@@ -229,9 +229,10 @@ public class GameManager : MonoBehaviour
         {
             if (target != null)
             {
-                Debug.Log($"Ultime lanc� sur : {target.GetName()}");
-                currentCharacter.Ultimate(target);
+                Debug.Log($"Ultime lanc� sur : {WaitForConfirmedEnnemy().GetName()}");
+                currentCharacter.Ultimate(WaitForConfirmedEnnemy());
                 currentCharacter.ResetMana();
+                ResetConfirmedCharacter();
                 EndUltimateMode();
             }
         }
@@ -313,10 +314,39 @@ public class GameManager : MonoBehaviour
         );
     }
 
+    private Character WaitForConfirmedEnnemy()
+    {
+        if (mSelectEnemy.GetConfirmed() != null)
+        {
+            actionConfirmed = true;
+            return mSelectEnemy.GetConfirmed();
+        }
+        else if (mSelectAllies.GetConfirmed() != null) 
+        {
+            actionConfirmed = true;
+            return mSelectAllies.GetConfirmed();
+        }
+        return null;
+    }
+
+    private void ResetConfirmedCharacter()
+    {
+        if (mSelectEnemy.GetConfirmed() != null)
+        {
+           mSelectEnemy.resetEnnemySelection();
+        }
+        else if (mSelectAllies.GetConfirmed() != null)
+        {
+            mSelectAllies.resetAllySelection();
+        }
+    }
+
     private void Update()
     {
         mCurrentSelectedAlly = mSelectAllies.GetSelectedAlly();
         mCurrentSelectedEnemy = mSelectEnemy.GetSelectedEnemy();
+
+        WaitForConfirmedEnnemy();
         WatchForActive();
         UpdateSkillPointsUI();
 
@@ -358,15 +388,6 @@ public class GameManager : MonoBehaviour
             if (character.CanLaunchUltimate() && !isInUltimateMode)
             {
                 StartUltimateMode();
-
-                RectTransform initialAction = mRotatingSelection.GetCompetenceCircle(); 
-                if (!character.IsUltimateTargetOnAllies())
-                {
-                    initialAction = mRotatingSelection.GetAttackCircle(); 
-                }
-
-                selectedAction = initialAction;
-                //UpdateSelectionMode(selectedAction, character); 
 
                 StartCoroutine(WaitForTargetSelection());
             }
@@ -516,4 +537,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+    public bool isInUltMode()
+    {
+        return isInUltimateMode;
+    }
 }

@@ -23,7 +23,7 @@ public class SkeletonMage : Player
     [SerializeField]
     private GameObject mUltimatePrefab;
 
-    [Header("Paramètres Attaque")]
+    [Header("Paramï¿½tres Attaque")]
 
     [SerializeField]
     private float mAttackSpeed;
@@ -40,6 +40,7 @@ public class SkeletonMage : Player
 
     private void Start()
     {
+        base.Start();
         animator.SetBool("idle_combat", true);
 
         mAttackAnimName = "attack_short_001";

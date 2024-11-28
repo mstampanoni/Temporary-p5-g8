@@ -3,6 +3,11 @@ using UnityEngine;
 public class Player : Character
 {
 
+    public void Start()
+    {
+        base.Start();
+    }
+
     public override void Attack(Character target)
     {
         Debug.Log(GetName() + "attaque" + target.GetName() + "!");

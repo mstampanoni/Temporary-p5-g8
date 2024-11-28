@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+//using Unity.Android.Types;
 using UnityEngine;
 using UnityEngine.VFX;
 
@@ -29,7 +29,7 @@ public class OrkPlayer : Player
 
     public override void Competence(Character target)
     {
-        Debug.Log(GetName() + "utilise une compétence spéciale sur" + target.GetName() + "!");
+        Debug.Log(GetName() + "utilise une compï¿½tence spï¿½ciale sur" + target.GetName() + "!");
 
 
         animator.Play("PointDagger");
@@ -62,14 +62,14 @@ public class OrkPlayer : Player
             return;
         }
 
-        // Récupérer les positions de l'arme et de la cible
+        // Rï¿½cupï¿½rer les positions de l'arme et de la cible
         Vector3 weaponPosition = weapon.transform.position;
         Vector3 targetPosition = Target.transform.position;
 
         // Calculer la position du Slash
         Vector3 slashPosition = weaponPosition + (targetPosition - weaponPosition);
 
-        // Instancier le Slash à la position calculée avec la rotation de l'arme
+        // Instancier le Slash ï¿½ la position calculï¿½e avec la rotation de l'arme
         Instantiate(Slash, slashPosition, weapon.transform.rotation);
 
         Debug.Log("Slash instantiated at: " + slashPosition);

@@ -3,6 +3,11 @@ using UnityEngine;
 
 public class Enemy : Character
 {
+    public void Start()
+    {
+        base.Start();
+    }
+
     public enum BehaviorType
     {
         LowDefense,
