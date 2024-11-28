@@ -5290,6 +5290,15 @@ MonoBehaviour:
   CompetenceOnAllies: 0
   UltimateOnAllies: 0
   animator: {fileID: 95036879989758482}
+  Slash: {fileID: 7603100771152400377, guid: b8a07a6b39d83ea478f7b07a1f757463, type: 3}
+  Target: {fileID: 0}
+  WeaponLeft: {fileID: 1036637056453866}
+  WeaponRight: {fileID: 1554863368748708}
+  WeaponLeftReal: {fileID: 1266703147035016}
+  WeaponRightReal: {fileID: 1957766209817448}
+  DaggerGreenMat: {fileID: 2100000, guid: 731893bfd0c95c94fa7b220d9ae73ac2, type: 2}
+  daggerEffect: {fileID: 4948618327318019853, guid: a5fff78b6cc35c24395f1d3d67619cb5,
+    type: 3}
 --- !u!114 &-4939089872309223380
 MonoBehaviour:
   m_ObjectHideFlags: 0
