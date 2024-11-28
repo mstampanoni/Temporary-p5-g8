@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
             {
                 GiveFirstEnemy();
             }
-            Debug.Log("Mode s�lection d'ennemis activ�.");
+            //Debug.Log("Mode s�lection d'ennemis activ�.");
         }
 
         else if (selectedAction == mRotatingSelection.GetCompetenceCircle())
@@ -118,7 +118,7 @@ public class GameManager : MonoBehaviour
                     {
                         GiveFirstAlly();
                     }
-                    Debug.Log("Mode s�lection d'alli�s activ�.");
+                    //Debug.Log("Mode s�lection d'alli�s activ�.");
                 }
                 else
                 {
@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviour
                     {
                         GiveFirstEnemy();
                     }
-                    Debug.Log("Mode s�lection d'ennemis activ�.");
+                    //Debug.Log("Mode s�lection d'ennemis activ�.");
                 }
             }
             else
@@ -244,6 +244,7 @@ public class GameManager : MonoBehaviour
         actionConfirmed = false;
         mRotatingSelection.setConfirmedActionNull();
     }
+
 
     private void WatchForActive()
     {
@@ -536,4 +537,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+    public bool isInUltMode()
+    {
+        return isInUltimateMode;
+    }
 }

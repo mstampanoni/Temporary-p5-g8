@@ -5215,6 +5215,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4558266444110246}
   - component: {fileID: 95036879989758482}
+  - component: {fileID: -7219444712319490021}
+  - component: {fileID: -4939089872309223380}
   m_Layer: 0
   m_Name: OrkAssasin
   m_TagString: Untagged
@@ -5262,6 +5264,44 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-7219444712319490021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637584495559616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4ddf6bb2c4aed94fa7042604d8abe83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mName: FeetSniffer
+  mMaxHealth: 100
+  mAttack: 25
+  mDefense: 20
+  mSpeed: 50
+  mCriticalChance: 0
+  mCriticalMultiplier: 0
+  mMaxMana: 0
+  mCurrentMana: 0
+  mChargingMana: 0
+  mLifeSystem: {fileID: -4939089872309223380}
+  CompetenceOnAllies: 0
+  UltimateOnAllies: 0
+  animator: {fileID: 95036879989758482}
+--- !u!114 &-4939089872309223380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637584495559616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c11fb74cade45294684470e1d43cf78f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1645117210141060
 GameObject:
   m_ObjectHideFlags: 0
