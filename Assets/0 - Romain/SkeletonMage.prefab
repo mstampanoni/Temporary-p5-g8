@@ -10900,14 +10900,13 @@ MonoBehaviour:
   mSpeed: 75
   mCriticalChance: 20
   mCriticalMultiplier: 2
-  mMaxMana: 500
-  mCurrentMana: 500
+  mMaxMana: 100
+  mCurrentMana: 0
   mChargingMana: 25
   mLifeSystem: {fileID: 3479680844573744154}
   CompetenceOnAllies: 0
   UltimateOnAllies: 0
   animator: {fileID: 1528875138926982074}
-  mCameraUltimate: {fileID: 0}
   mAttackPrefab: {fileID: 9023825190770220729, guid: 237dbe6f572cc504a8904086a5bac915,
     type: 3}
   mCapacityPrefab: {fileID: 1984162283538821230, guid: 43b727c4ea991d349a2c8137605b010c,
@@ -10916,7 +10915,6 @@ MonoBehaviour:
     type: 3}
   mAttackSpeed: 40
   mAttackSpawnPoint: {fileID: 8806182666709871467}
-  enemy: {fileID: 0}
 --- !u!114 &3479680844573744154
 MonoBehaviour:
   m_ObjectHideFlags: 0

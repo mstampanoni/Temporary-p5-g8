@@ -3211,7 +3211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ShowDebugText: 1
+  m_ShowDebugText: 0
   m_ShowCameraFrustum: 1
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
@@ -5955,10 +5955,10 @@ MonoBehaviour:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1169378472}
   - {fileID: 713639729}
   - {fileID: 303951413}
   - {fileID: 484433122}
   - {fileID: 868374310}
-  - {fileID: 1169378472}
   - {fileID: 966312048}
   - {fileID: 1053884385}

@@ -134,6 +134,8 @@ public class SkeletonMage : Player
         Vector3 direction = (target.gameObject.transform.position - InstanceAttack.transform.position).normalized;
 
         rb.velocity = direction * mAttackSpeed;
+
+        AddMana(25);
     }
 
     public override void Competence(Character target)

@@ -171,17 +171,17 @@ public class GameManager : MonoBehaviour
     {
         Character target = null;
 
-        Debug.Log("Mode sélection activé. Veuillez choisir une cible.");
+        Debug.Log("Mode s�lection activ�. Veuillez choisir une cible.");
 
         while (!actionConfirmed)
         {
             RectTransform newSelection = mRotatingSelection.GetSelected();
 
-            if (newSelection != null && newSelection != selectedAction)
+            if ((newSelection != null && newSelection != selectedAction) || target == null)
             {
                 selectedAction = newSelection;
 
-                if (!isInUltimateMode)
+                if (isInUltimateMode)
                 {
                     if (!currentCharacter.IsUltimateTargetOnAllies())
                     {
@@ -190,21 +190,13 @@ public class GameManager : MonoBehaviour
                             Debug.Log($"Cible ennemie potentielle : {mCurrentSelectedEnemy.name}");
                             target = mCurrentSelectedEnemy;
                         }
-                        else
-                        {
-                            Debug.Log("Aucun ennemi sélectionné.");
-                        }
                     }
                     else
                     {
                         if (mCurrentSelectedAlly != null)
                         {
-                            Debug.Log($"Cible alliée potentielle : {mCurrentSelectedAlly.name}");
+                            Debug.Log($"Cible alli�e potentielle : {mCurrentSelectedAlly.name}");
                             target = mCurrentSelectedAlly;
-                        }
-                        else
-                        {
-                            Debug.Log("Aucun allié sélectionné.");
                         }
                     }
                 }
@@ -219,7 +211,7 @@ public class GameManager : MonoBehaviour
                     {
                         if (currentCharacter.isCompetenceTargetOnAllies() && mCurrentSelectedAlly != null)
                         {
-                            Debug.Log($"Cible alliée potentielle : {mCurrentSelectedAlly.name}");
+                            Debug.Log($"Cible alli�e potentielle : {mCurrentSelectedAlly.name}");
                             target = mCurrentSelectedAlly;
                         }
                         else if (mCurrentSelectedEnemy != null)
@@ -227,31 +219,17 @@ public class GameManager : MonoBehaviour
                             Debug.Log($"Cible ennemie potentielle : {mCurrentSelectedEnemy.name}");
                             target = mCurrentSelectedEnemy;
                         }
-                        else
-                        {
-                            Debug.Log("Aucune cible sélectionnée pour la compétence.");
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log("Aucune sélection valide en mode ultime.");
                     }
                 }
             }
-
             yield return null;
-        }
-
-        if (target == null)
-        {
-            Debug.LogError("Erreur: Target est null au moment de l'exécution de l'action!");
         }
 
         if (isInUltimateMode)
         {
             if (target != null)
             {
-                Debug.Log($"Ultime lancé sur : {target.GetName()}");
+                Debug.Log($"Ultime lanc� sur : {target.GetName()}");
                 currentCharacter.Ultimate(target);
                 currentCharacter.ResetMana();
                 EndUltimateMode();
@@ -259,7 +237,6 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Debug.Log($"Exécution de l'action sur la cible : {target?.GetName() ?? "aucune"}");
             ExecuteAction(currentCharacter, target);
         }
 
