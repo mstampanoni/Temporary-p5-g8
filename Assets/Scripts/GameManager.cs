@@ -516,4 +516,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+    public bool isInUltMode()
+    {
+        return isInUltimateMode;
+    }
 }

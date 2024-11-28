@@ -23,7 +23,7 @@ public class SkeletonMage : Player
     [SerializeField]
     private GameObject mUltimatePrefab;
 
-    [Header("Paramètres Attaque")]
+    [Header("Paramï¿½tres Attaque")]
 
     [SerializeField]
     private float mAttackSpeed;
