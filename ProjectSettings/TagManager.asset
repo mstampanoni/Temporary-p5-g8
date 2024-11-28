@@ -8,6 +8,9 @@ TagManager:
   - BackCam
   - OrbitalCam
   - LogicCam
+  - Dummy
+  - SKUltCam
+  - UltPlaceholder
   layers:
   - Default
   - TransparentFX

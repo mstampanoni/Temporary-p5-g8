@@ -20,23 +20,12 @@ public class LogicCam : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            // use right tag
-            SwitchCamera("FrontCam");
-        }
+        if (Input.GetKeyDown(KeyCode.Alpha1)) { SwitchCamera("FrontCam"); }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            // use right tag
-            SwitchCamera("BackCam");
-        }
+        if (Input.GetKeyDown(KeyCode.Alpha2)) { SwitchCamera("BackCam"); }
 
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            // use right tag
-            SwitchCamera("OrbitalCam");
-        }
+        if (Input.GetKeyDown(KeyCode.Alpha3)) { SwitchCamera("OrbitalCam"); }
+
     }
 
     private void SwitchCamera(string targetTag)

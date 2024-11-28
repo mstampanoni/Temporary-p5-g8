@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
             {
                 GiveFirstEnemy();
             }
-            Debug.Log("Mode s�lection d'ennemis activ�.");
+            //Debug.Log("Mode s�lection d'ennemis activ�.");
         }
 
         else if (selectedAction == mRotatingSelection.GetCompetenceCircle())
@@ -118,7 +118,7 @@ public class GameManager : MonoBehaviour
                     {
                         GiveFirstAlly();
                     }
-                    Debug.Log("Mode s�lection d'alli�s activ�.");
+                    //Debug.Log("Mode s�lection d'alli�s activ�.");
                 }
                 else
                 {
@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviour
                     {
                         GiveFirstEnemy();
                     }
-                    Debug.Log("Mode s�lection d'ennemis activ�.");
+                    //Debug.Log("Mode s�lection d'ennemis activ�.");
                 }
             }
             else
@@ -171,7 +171,7 @@ public class GameManager : MonoBehaviour
     {
         Character target = null;
 
-        Debug.Log("Mode s�lection activ�. Veuillez choisir une cible.");
+        Debug.Log("Mode sélection activé. Veuillez choisir une cible.");
 
         while (!actionConfirmed)
         {
@@ -190,13 +190,21 @@ public class GameManager : MonoBehaviour
                             Debug.Log($"Cible ennemie potentielle : {mCurrentSelectedEnemy.name}");
                             target = mCurrentSelectedEnemy;
                         }
+                        else
+                        {
+                            Debug.Log("Aucun ennemi sélectionné.");
+                        }
                     }
                     else
                     {
                         if (mCurrentSelectedAlly != null)
                         {
-                            Debug.Log($"Cible alli�e potentielle : {mCurrentSelectedAlly.name}");
+                            Debug.Log($"Cible alliée potentielle : {mCurrentSelectedAlly.name}");
                             target = mCurrentSelectedAlly;
+                        }
+                        else
+                        {
+                            Debug.Log("Aucun allié sélectionné.");
                         }
                     }
                 }
@@ -211,7 +219,7 @@ public class GameManager : MonoBehaviour
                     {
                         if (currentCharacter.isCompetenceTargetOnAllies() && mCurrentSelectedAlly != null)
                         {
-                            Debug.Log($"Cible alli�e potentielle : {mCurrentSelectedAlly.name}");
+                            Debug.Log($"Cible alliée potentielle : {mCurrentSelectedAlly.name}");
                             target = mCurrentSelectedAlly;
                         }
                         else if (mCurrentSelectedEnemy != null)
@@ -219,17 +227,31 @@ public class GameManager : MonoBehaviour
                             Debug.Log($"Cible ennemie potentielle : {mCurrentSelectedEnemy.name}");
                             target = mCurrentSelectedEnemy;
                         }
+                        else
+                        {
+                            Debug.Log("Aucune cible sélectionnée pour la compétence.");
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Aucune sélection valide en mode ultime.");
                     }
                 }
             }
+
             yield return null;
+        }
+
+        if (target == null)
+        {
+            Debug.LogError("Erreur: Target est null au moment de l'exécution de l'action!");
         }
 
         if (isInUltimateMode)
         {
             if (target != null)
             {
-                Debug.Log($"Ultime lanc� sur : {target.GetName()}");
+                Debug.Log($"Ultime lancé sur : {target.GetName()}");
                 currentCharacter.Ultimate(target);
                 currentCharacter.ResetMana();
                 EndUltimateMode();
@@ -237,12 +259,14 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            Debug.Log($"Exécution de l'action sur la cible : {target?.GetName() ?? "aucune"}");
             ExecuteAction(currentCharacter, target);
         }
 
         actionConfirmed = false;
         mRotatingSelection.setConfirmedActionNull();
     }
+
 
     private void WatchForActive()
     {

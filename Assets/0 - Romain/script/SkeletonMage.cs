@@ -2,6 +2,7 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 using UnityEngine.VFX;
 
 public class SkeletonMage : Player
@@ -10,11 +11,6 @@ public class SkeletonMage : Player
 
     [SerializeField]
     private Animator animator;
-
-    [Header("Camera Ultimate")]
-
-    [SerializeField]
-    private CinemachineVirtualCamera mCameraUltimate;
 
     [Header("Prefab")]
 
@@ -35,12 +31,12 @@ public class SkeletonMage : Player
     [SerializeField]
     private Transform mAttackSpawnPoint;
 
-    [Header("Temp")]
-    [SerializeField]
-    private Character enemy;
-
     private string mAttackAnimName;
     private string mUltimateAnimName;
+
+    private CinemachineVirtualCamera mCameraUltimate;
+    private Transform mUltPlaceholder;
+
 
     private void Start()
     {
@@ -48,29 +44,23 @@ public class SkeletonMage : Player
 
         mAttackAnimName = "attack_short_001";
         mUltimateAnimName = "zoom";
-}
+
+        mCameraUltimate = GameObject.FindWithTag("SKUltCam").GetComponent<CinemachineVirtualCamera>();
+        mUltPlaceholder = GameObject.FindWithTag("UltPlaceholder").GetComponent<Transform>();
+    }
 
     private void Update()
     {
-
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-        {       
-            StartCoroutine(SyncAttack(0));
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            StartCoroutine(SyncAttack(1));
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            StartCoroutine(SyncAttack(2));
-        }
     }
 
-    private IEnumerator SyncUltimate()
+    private IEnumerator SyncUltimate(Character target)
     {
+        Vector3 oldPos = target.gameObject.transform.position;
+
+        target.gameObject.transform.position.Set(mUltPlaceholder.position.x, mUltPlaceholder.position.y, mUltPlaceholder.position.z);
+
+        mCameraUltimate.LookAt = target.gameObject.transform;
+
         mCameraUltimate.Priority = 10;
 
         mCameraUltimate.GetComponent<Animator>().SetTrigger("Begin");
@@ -82,15 +72,16 @@ public class SkeletonMage : Player
             yield return null; 
         }
 
-        Ultimate(enemy);
+        LaunchUltimate(target);
 
         yield return new WaitForSeconds(3);
 
-        mCameraUltimate.Priority = 10;
+        mCameraUltimate.Priority = 0;
 
+        target.gameObject.transform.position.Set(oldPos.x, oldPos.y , oldPos.z);
     }
 
-    private IEnumerator SyncAttack(int attackId)
+    private IEnumerator SyncAttack(int attackId, Character target)
     {
         Animator animator = GetComponent<Animator>();
 
@@ -106,13 +97,13 @@ public class SkeletonMage : Player
         switch (attackId)
         {
             case 0:
-                Attack(enemy);
+                LaunchAttack(target);
                 break;
             case 1:
-                Competence(enemy);
+                LaunchCompetence(target);
                 break;
             case 2:
-                StartCoroutine(SyncUltimate());
+                StartCoroutine(SyncUltimate(target));
                 break;
             default:
                 break;
@@ -131,18 +122,26 @@ public class SkeletonMage : Player
 
     public override void Attack(Character target)
     {
-        GameObject InstanceAttack = Instantiate(mAttackPrefab, mAttackSpawnPoint.position, mAttackSpawnPoint.rotation, null);
+        StartCoroutine(SyncAttack(0, target));       
+    }
 
+    private void LaunchAttack(Character target)
+    {
+        GameObject InstanceAttack = Instantiate(mAttackPrefab, mAttackSpawnPoint.position, mAttackSpawnPoint.rotation, null);
 
         Rigidbody rb = InstanceAttack.GetComponent<Rigidbody>();
 
         Vector3 direction = (target.gameObject.transform.position - InstanceAttack.transform.position).normalized;
 
         rb.velocity = direction * mAttackSpeed;
-        
     }
 
     public override void Competence(Character target)
+    {
+        StartCoroutine(SyncAttack(1, target));
+    }
+
+    private void LaunchCompetence(Character target)
     {
         GameObject InstanceCompetence = Instantiate(mCapacityPrefab, target.gameObject.transform.position, target.gameObject.transform.rotation, null);
         Destroy(InstanceCompetence, InstanceCompetence.GetComponent<VisualEffect>().GetFloat("Lifetime"));
@@ -150,6 +149,10 @@ public class SkeletonMage : Player
     }
 
     public override void Ultimate(Character target)
+    {
+        StartCoroutine(SyncAttack(2, target));
+    }
+    private void LaunchUltimate(Character target)
     {
         GameObject InstanceUltimate = Instantiate(mUltimatePrefab, target.gameObject.transform.position, target.gameObject.transform.rotation, null);
         Destroy(InstanceUltimate, InstanceUltimate.GetComponent<VisualEffect>().GetFloat("Lifetime"));
