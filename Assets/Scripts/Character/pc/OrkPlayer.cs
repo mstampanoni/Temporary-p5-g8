@@ -2,45 +2,113 @@ using System.Collections;
 using System.Collections.Generic;
 //using Unity.Android.Types;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class OrkPlayer : Player
 {
     public Animator animator;
+    public GameObject Slash;
+    public GameObject GreenSlash;
+    public Character Target;
+    public GameObject WeaponLeft;
+    public GameObject WeaponRight;
+
+    public GameObject WeaponLeftReal;
+    public GameObject WeaponRightReal;
+
+    public Material DaggerGreenMat;
+
+    public GameObject daggerEffect;
+    public bool poison = false;
+
+
 
     public override void Attack(Character target)
     {
         Debug.Log(GetName() + "attaque" + target.GetName() + "!");
-
+        Target = target;
         animator.Play("ComboAttack");
+
     }
 
     public override void Competence(Character target)
     {
-        Debug.Log(GetName() + "utilise une comp�tence sp�ciale sur" + target.GetName() + "!");
 
-        animator.Play("Cast");
+        if (poison == false)
+        {
+            poison = true;
+        }
+        
+
+        Debug.Log(GetName() + "utilise une comp�tence sp�ciale sur" + target.GetName() + "!");
+        Target = target;
+        animator.Play("PointDagger");
+
 
     }
 
     public override void Ultimate(Character target)
     {
         Debug.Log(GetName() + "utilise son ultime sur");
-
+        Target = target;
         animator.Play("TauntCry");
     }
 
-    public void GenerateSlash()
+    public void GenerateSlashFromWeaponLeft()
     {
-        if (gameObject.GetComponent<Transform>().Find("weapon2_left")== null)
+        GenerateSlashFromWeapon(WeaponLeft);
+    }
+
+    public void GenerateSlashFromWeaponRight()
+    {
+        GenerateSlashFromWeapon(WeaponRight);
+    }
+
+    private void GenerateSlashFromWeapon(GameObject weapon)
+    {
+
+        GameObject slash;
+
+        if (poison)
         {
-            Debug.Log("WeaponLeft Failed find");
+            slash = GreenSlash;
+        }
+        else
+        {
+            slash = Slash;
         }
 
-        if (gameObject.GetComponent<Transform>().Find("weapon2_right") == null)
+        
+
+        // R�cup�rer les positions de l'arme et de la cible
+        Vector3 weaponPosition = weapon.transform.position;
+        Vector3 targetPosition = Target.transform.position;
+
+        // Calculer la position du Slash
+        Vector3 slashPosition = weaponPosition + (targetPosition - weaponPosition);
+
+        // Instancier le Slash � la position calcul�e avec la rotation de l'arme
+        Instantiate(slash, slashPosition, weapon.transform.rotation);
+
+        Debug.Log("Slash instantiated at: " + slashPosition);
+    }
+
+    public void DaggerShader()
+    {
+        if (daggerEffect == null)
         {
-            Debug.Log("WeaponRight Failed find" );
+            Debug.LogError("Dagger particle effect is not assigned!");
+            return;
         }
 
+        // Positionner et lancer l'effet de particules sur WeaponLeft
+        GameObject effect = Instantiate(daggerEffect, WeaponLeft.transform.position, WeaponLeft.transform.rotation);
+
+
+        WeaponLeftReal.GetComponent<Renderer>().material = DaggerGreenMat;
+        WeaponRightReal.GetComponent<Renderer>().material = DaggerGreenMat;
+
+        
     }
 
 }
