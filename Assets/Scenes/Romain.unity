@@ -546,6 +546,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46b88374514deb64c9e62589b18075c3, type: 3}
+--- !u!1 &154842813 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4565567381804635772, guid: 46b88374514deb64c9e62589b18075c3,
+    type: 3}
+  m_PrefabInstance: {fileID: 149578897}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &182436064
 GameObject:
   m_ObjectHideFlags: 3
@@ -1213,6 +1219,8 @@ MonoBehaviour:
   mCurrentMana: 0
   mChargingMana: 0
   mLifeSystem: {fileID: 337353595}
+  CompetenceOnAllies: 0
+  UltimateOnAllies: 0
 --- !u!114 &337353595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1874,7 +1882,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 702780696}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.21808846, y: -0.6726346, z: 0.21808836, w: 0.6726349}
+  m_LocalRotation: {x: 0.21808839, y: -0.6726347, z: 0.21808839, w: 0.6726347}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2968,6 +2976,13 @@ MonoBehaviour:
   selectedScale: 1.005
   deselectedScale: 0.905
   animationSpeed: 0.2
+  skillPointObjects: []
+  bounceAnimationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1230260956
 GameObject:
   m_ObjectHideFlags: 0
@@ -3100,7 +3115,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1242577775}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.20230062, y: -0.6775502, z: 0.20230055, w: 0.6775505}
+  m_LocalRotation: {x: 0.20230067, y: -0.6775502, z: 0.20230058, w: 0.67755055}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3259,6 +3274,7 @@ MonoBehaviour:
   - {fileID: 8285271239948507561, guid: dd94a57ddc362964d9298dc5e21219ff, type: 3}
   - {fileID: 6278054709642768575, guid: 4bd071f8d3af84c4bb64a3aa7c5d0f2e, type: 3}
   - {fileID: 3040884690538020181, guid: e0e48479230aa2f43a147c63bf688664, type: 3}
+  - {fileID: 154842813}
   mEnemyPrefabs:
   - {fileID: 6032133984504754570, guid: 790f7beb1494c394a8221dbceb448e06, type: 3}
   - {fileID: 6032133984504754570, guid: bb2b70aed2cd3084fbb4d8c89eeec1be, type: 3}
@@ -3271,6 +3287,7 @@ MonoBehaviour:
   - {fileID: 807284101}
   mRotatingSelection: {fileID: 1227332454}
   mSelectEnemy: {fileID: 1330453881}
+  mSelectAllies: {fileID: 0}
   mUIManager: {fileID: 1227332455}
 --- !u!4 &1330453880
 Transform:
@@ -3303,7 +3320,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73f24b53e99c3774c871e3499a49e192, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  allEnemies: []
 --- !u!1 &1434149302
 GameObject:
   m_ObjectHideFlags: 0
@@ -3675,7 +3691,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1639951851}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.2058174, y: -0.67649037, z: 0.20581737, w: 0.6764904}
+  m_LocalRotation: {x: 0.20581739, y: -0.67649037, z: 0.20581739, w: 0.67649037}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

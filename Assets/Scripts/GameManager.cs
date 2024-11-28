@@ -73,6 +73,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < mPlayerPrefabs.Count && i < mPlayerPositions.Length; i++)
         {
             GameObject player = Instantiate(mPlayerPrefabs[i], mPlayerPositions[i].position, Quaternion.identity);
+            player.transform.rotation = Quaternion.Euler(0, 90, 0);
             player.GetComponent<Player>().isInGame(true);
             player.transform.SetParent(pcContainer.transform);
             AddToTurnQueue(player);
@@ -81,6 +82,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < mEnemyPrefabs.Count && i < mEnemyPositions.Length; i++)
         {
             GameObject enemy = Instantiate(mEnemyPrefabs[i], mEnemyPositions[i].position, Quaternion.identity);
+            enemy.transform.rotation = Quaternion.Euler(0, -90, 0);
             enemy.transform.SetParent(npcContainer.transform);
             enemy.GetComponent<Enemy>().isInGame(true);
             AddToTurnQueue(enemy);
