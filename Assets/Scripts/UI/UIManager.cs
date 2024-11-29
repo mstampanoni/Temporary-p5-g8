@@ -6,7 +6,7 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private GameObject playerUIPrefab;
     [SerializeField] private RectTransform uiCanvas;  
-    [SerializeField] private float xOffset = 100f;
+    [SerializeField] private float xOffset = 75f;
     [SerializeField] private float selectedScale = 1.1f;
     [SerializeField] private float deselectedScale = 1f;
     [SerializeField] private float animationSpeed = 0.2f;

@@ -5,9 +5,11 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Map.unity
-    path: Assets/Scenes/GameManager.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/GMandMap.unity
+    guid: 589ff413da813844fa5404bcbbf171d0
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

@@ -387,6 +387,7 @@ public class GameManager : MonoBehaviour
         {
             if (character.CanLaunchUltimate() && !isInUltimateMode)
             {
+                currentCharacter = character;   
                 StartUltimateMode();
 
                 StartCoroutine(WaitForTargetSelection());
